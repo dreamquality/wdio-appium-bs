@@ -2,10 +2,6 @@
 
 e2e-test template with hybrid mob apps
 
-```sh
-
-```
-
 ## Setup
 
 ### Install software and check out the project
