@@ -19,6 +19,7 @@
     "wdio-wait-for": "^3.0.6"
   },
   "scripts": {
+    "test:ios:firebase": "wdio run ./config/wdio.conf.ios.firebase.ts",
     "test:android:bs": "wdio run ./config/wdio.conf.android.bs.ts",
     "test:android": "wdio run ./config/wdio.conf.android.ts",
     "test:ios": "wdio run ./config/wdio.conf.ios.ts",
@@ -27,7 +28,10 @@
     "allure:generate": "npx allure generate ./reporters/allure-results --clean"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.13.0",
     "@wdio/spec-reporter": "^8.15.0",
-    "dotenv": "^16.3.1"
+    "axios": "^1.7.7",
+    "dotenv": "^16.3.1",
+    "google-auth-library": "^9.14.2"
   }
 }

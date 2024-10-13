@@ -11,10 +11,12 @@ export const config = {
       // For options see
       // https://github.com/webdriverio/webdriverio/tree/master/packages/wdio-appium-service
       args: ["--allow-insecure"],
+      command: 'appium',
+      // 'session-override': true,
     },
     capabilities: [{
       // capabilities for local Appium web tests on an Android Emulator or Real device
-      platformName: 'Android',
+      "appium:platformName": 'Android',
       'appium:deviceName': 'ZE2232TTQ8',
       "appium:app": join(process.cwd(), "./apps/android/app-staging-debug.apk"),
       'appium:platformVersion': '10.0',

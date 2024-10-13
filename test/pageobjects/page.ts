@@ -7,11 +7,15 @@ import { browser, $, $$ } from '@wdio/globals'
 
 export default class Page {
 
-    public async getElement(element: string) {
+    async open(path: string) {
+      await browser.url(path);
+    }
+
+    public async getElement(element: string): Promise<WebdriverIO.Element> {
       return $(element);
     }
   
-    public async getAllElements(element: string) {
+    public async getAllElements(element: string): Promise<WebdriverIO.Element[]> {
       return $$(element);
     }
   
@@ -25,8 +29,9 @@ export default class Page {
       return outerHTML.getHTML();
     }
   
-    public async getElementByIndex(element: string, index: number) {
-      return this.getAllElements(element)[index];
+    public async getElementByIndex(element: string, index: number): Promise<WebdriverIO.Element> {
+      const elements = await this.getAllElements(element); 
+      return elements[index]; 
     }
   
     public async isElementDisplayed(element: string): Promise<boolean> {
@@ -60,6 +65,10 @@ export default class Page {
      await browser.waitUntil(() => {
         return this.isElementByIndexDisplayed(element, index);
       });
+    }
+
+    async waitForElement(element: WebdriverIO.Element, timeout: number = 10000) {
+      await element.waitForDisplayed({ timeout });
     }
   
     public async getElementText(element: string): Promise<string> {
@@ -177,5 +186,48 @@ export default class Page {
     public async clickAndroidBackBtn(): Promise<void> {
       await browser.pressKeyCode(4);
     }
+
+    public async swipeUp(): Promise<void> {
+      const { height, width } = await browser.getWindowSize();
+      const startX = width / 2;
+      const startY = height * 0.8;
+      const endY = height * 0.2;
+      await browser.touchAction([
+          { action: 'press', x: startX, y: startY },
+          { action: 'wait', ms: 500 },
+          { action: 'moveTo', x: startX, y: endY },
+          'release'
+      ]);
+    }
+
+      public async swipeDown(): Promise<void> {
+        const { height, width } = await browser.getWindowSize();
+        const startX = width / 2;
+        const startY = height * 0.2;
+        const endY = height * 0.8;
+        await browser.touchAction([
+            { action: 'press', x: startX, y: startY },
+            { action: 'wait', ms: 500 },
+            { action: 'moveTo', x: startX, y: endY },
+            'release'
+        ]);
+    }
+
+    public async longTap(x: number, y: number) {
+      await browser.touchAction([
+          { action: 'press', x, y },
+          { action: 'wait', ms: 1000 },
+          'release'
+      ]);
+    }
+
+    public async setOrientation(orientation: 'PORTRAIT' | 'LANDSCAPE'): Promise<void> {
+        await browser.setOrientation(orientation);
+    }
+
+    // async getOrientation(): Promise<'PORTRAIT' | 'LANDSCAPE'> {
+    //   return await browser.getOrientation();
+    // }
+
   }
   

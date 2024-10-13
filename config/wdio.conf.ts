@@ -1,6 +1,16 @@
 import { browser } from '@wdio/globals'
+import allureReporter from '@wdio/allure-reporter'
+import fs from 'fs';
+import path from 'path';
 import dotenv from "dotenv";
 dotenv.config(); // Load environment variables from .env file
+
+const screenshotDir = path.join(process.cwd(), 'allure-results', 'screenshots');
+// Создание директории для скриншотов, если она не существует
+if (!fs.existsSync(screenshotDir)) {
+    fs.mkdirSync(screenshotDir, { recursive: true });
+}
+
 export const config = {
     //
     // ====================
@@ -152,7 +162,17 @@ export const config = {
         outputDir: "./reporters/junit-results", // https://webdriver.io/docs/junit-reporter.html
       },
     ],
-        // ['allure', {outputDir: './reporters/allure-results'}]
+        ['allure', {outputDir: './reporters/allure-results',
+            disableWebdriverStepsReporting: true,
+            disableWebdriverScreenshotsReporting: false,}]
+
+
+        // ['allure', {
+        //     outputDir: 'allure-results',
+        //     disableWebdriverStepsReporting: false, // Включение шагов WebDriver
+        //     disableWebdriverScreenshotsReporting: false,
+        //     useCucumberStepReporter: false,
+        // }],
     ],
 
     
@@ -259,7 +279,9 @@ export const config = {
      */
     afterTest: async function(test, context, { error, result, duration, passed, retries }) {
         if (!passed) {
-            await browser.takeScreenshot();
+            const screenshotPath = path.join(screenshotDir, `${test.title.replace(/\s+/g, '_')}.png`);
+            await browser.saveScreenshot(screenshotPath);
+            allureReporter.addAttachment('Screenshot', fs.readFileSync(screenshotPath), 'image/png');
         }
     },
 
