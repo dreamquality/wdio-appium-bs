@@ -43,30 +43,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: webdriverio-test-results
-          path: ./reporters/allure-results/
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
           name: allure-test-results
           path: allure-report/
-
-      - name: Get Allure history
-        uses: actions/checkout@v2
-        if: always()
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
-
-      - name: Allure Report action from marketplace
-        uses: simple-elf/allure-report-action@v1.9
-        if: always()
-        with:
-          allure_results: allure-results
-          allure_history: allure-history
-          keep_reports: 20
 
       - name: Deploy report to Github Pages
         if: always()
@@ -74,4 +52,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history
+          publish_dir: allure-report
