@@ -1,4 +1,4 @@
-# e2e-tests, wdio v8, appium v2, hybrid app (android, ios), browserstack
+# e2e-tests, wdio v8, appium v2, hybrid app (android, ios), browserstack, firebase
 
 e2e-test template with hybrid mob apps
 
