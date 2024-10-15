@@ -91,6 +91,19 @@ export const config = {
     } catch (error) {
       console.error('Error creating test matrix:', error);
     }
+
+
+  afterSession: async () => {
+    const bucketName: any = process.env.FIREBASE_BUCKET_NAME;
+    const iosAppPath = path.basename(process.env.FIREBASE_IOS_APP_PATH); 
+
+    try {
+      const bucket = storage.bucket(bucketName);
+      await bucket.file(`apps/${iosAppPath}`).delete();
+      console.log(`Successfully deleted the app from Google Cloud Storage: apps/${iosAppPath}`);
+    } catch (error) {
+      console.error('Error deleting the app from Google Cloud Storage:', error);
+    }
   },
 };
 
