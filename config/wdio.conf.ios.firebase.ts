@@ -33,8 +33,8 @@ export const config = {
   ],
 
   beforeSession: async () => {
-    const bucketName: any = process.env.FIREBASE_BUCKET_NAME; // Your storage bucket name
-    const unresolvedIosAppPath: any = process.env.FIREBASE_IOS_APP_PATH; 
+    const bucketName = process.env.FIREBASE_BUCKET_NAME;
+    const unresolvedIosAppPath = process.env.FIREBASE_IOS_APP_PATH;
     const bucket = storage.bucket(bucketName);
     const iosAppPath = path.resolve(unresolvedIosAppPath);
 
@@ -48,14 +48,14 @@ export const config = {
       throw error; // Stop the session on upload error
     }
 
-    const gcsAppPath = `gs://${bucketName}/apps/${path.basename(iosAppPath)}`; // url if you decided to upload the app manually
-    
+    const gcsAppPath = `gs://${bucketName}/apps/${path.basename(iosAppPath)}`;
+
     // Create test matrix via Firebase REST API
     const projectId = process.env.FIREBASE_PROJECT_ID;
-    const accessToken = await getAccessToken(); // Get access token
+    const accessToken = await getAccessToken();
 
     const testMatrixUrl = `https://testing.googleapis.com/v1/projects/${projectId}/testMatrices`;
-    
+
     try {
       const response = await axios.post(testMatrixUrl, {
         testSpecification: {
@@ -91,11 +91,11 @@ export const config = {
     } catch (error) {
       console.error('Error creating test matrix:', error);
     }
-
+  },
 
   afterSession: async () => {
-    const bucketName: any = process.env.FIREBASE_BUCKET_NAME;
-    const iosAppPath = path.basename(process.env.FIREBASE_IOS_APP_PATH); 
+    const bucketName = process.env.FIREBASE_BUCKET_NAME;
+    const iosAppPath = path.basename(process.env.FIREBASE_IOS_APP_PATH);
 
     try {
       const bucket = storage.bucket(bucketName);
