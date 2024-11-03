@@ -1,0 +1,5 @@
+{
+  "error": "no such element",
+  "message": "no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//android.widget.Button[@content-desc='Sign Up']\"}\n  (Session info: chrome=114.0.5735.130)",
+  "stacktrace": "#0 0x55647daeb4e3 <unknown>\n#1 0x55647d81ac76 <unknown>\n#2 0x55647d856c96 <unknown>\n#3 0x55647d856dc1 <unknown>\n#4 0x55647d8907f4 <unknown>\n#5 0x55647d87603d <unknown>\n#6 0x55647d88e30e <unknown>\n#7 0x55647d875de3 <unknown>\n#8 0x55647d84b2dd <unknown>\n#9 0x55647d84c34e <unknown>\n#10 0x55647daab3e4 <unknown>\n#11 0x55647daaf3d7 <unknown>\n#12 0x55647dab9b20 <unknown>\n#13 0x55647dab0023 <unknown>\n#14 0x55647da7e1aa <unknown>\n#15 0x55647dad46b8 <unknown>\n#16 0x55647dad4847 <unknown>\n#17 0x55647dae4243 <unknown>\n#18 0x7fe508c2ee9e start_thread\n"
+}
