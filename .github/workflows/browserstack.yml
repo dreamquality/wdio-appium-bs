@@ -23,7 +23,7 @@ jobs:
         run: |
           echo "BROWSERSTACK_USERNAME=${{ secrets.BROWSERSTACK_USERNAME }}" >> .env
           echo "BROWSERSTACK_ACCESS_KEY=${{ secrets.BROWSERSTACK_ACCESS_KEY }}" >> .env
-          echo "BROWSERSTACK_APP_ID=${{ secrets.BROWSERSTACK_APP_ID }}" >> .env
+          echo "BROWSERSTACK_ANDROID_APP_ID=${{ secrets.BROWSERSTACK_APP_ID }}" >> .env
 
       - name: Install Appium and dependencies
         run: |
