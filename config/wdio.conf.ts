@@ -163,7 +163,7 @@ export const config = {
       },
     ],
         ['allure', {outputDir: './reporters/allure-results',
-            disableWebdriverStepsReporting: true,
+            disableWebdriverStepsReporting: false,
             disableWebdriverScreenshotsReporting: false,}]
 
 
@@ -277,13 +277,13 @@ export const config = {
      * @param {boolean} result.passed    true if test has passed, otherwise false
      * @param {object}  result.retries   informations to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
-    afterTest: async function(test, context, { error, result, duration, passed, retries }) {
-        if (!passed) {
-            const screenshotPath = path.join(screenshotDir, `${test.title.replace(/\s+/g, '_')}.png`);
-            await browser.saveScreenshot(screenshotPath);
-            allureReporter.addAttachment('Screenshot', fs.readFileSync(screenshotPath), 'image/png');
-        }
-    },
+    // afterTest: async function(test, context, { error, result, duration, passed, retries }) {
+    //     if (!passed) {
+    //         const screenshotPath = path.join(screenshotDir, `${test.title.replace(/\s+/g, '_')}.png`);
+    //         await browser.saveScreenshot(screenshotPath);
+    //         allureReporter.addAttachment('Screenshot', fs.readFileSync(screenshotPath), 'image/png');
+    //     }
+    // },
 
 
     /**
