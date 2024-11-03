@@ -58,6 +58,37 @@ To run Android tests on a Windows machine, ensure the following setup:
     ```
 13. Open Appium Inspector and connect it to your device to interact with your apps.
 
+### Running iOS Tests
+
+To run iOS tests with BrowserStack or locally, ensure the following setup:
+
+1. Install Xcode (version 12 or higher) from the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835).
+2. Configure Xcode Command Line Tools by selecting **Xcode > Preferences > Locations** and ensuring the Command Line Tools dropdown is set to the Xcode version.
+3. Install [CocoaPods](https://cocoapods.org/) (if not already installed) for dependency management:
+   ```sh
+   sudo gem install cocoapods
+   ```
+4. Set up Appium for iOS testing:
+   ```sh
+   npm install -g appium
+   appium driver install xcuitest
+   ```
+5. Connect an iOS device via USB and enable **Developer Mode** on the device (found in **Settings > Privacy & Security > Developer Mode** on iOS 16+).
+6. In the iOS configuration file (`config/wdio.ios.conf.js`), specify `platformVersion`, `deviceName`, and the path to the `.ipa` file.
+7. Start Appium server:
+   ```sh
+   appium
+   ```
+8. Use Appium Inspector to verify that the setup works and to locate UI elements on your iOS app.
+
+### Running iOS Tests on BrowserStack
+
+1. Ensure that the `.env` file contains `BROWSERSTACK_IOS_APP_ID` along with your BrowserStack credentials (`BROWSERSTACK_USERNAME`, `BROWSERSTACK_ACCESS_KEY`).
+2. Run iOS tests on BrowserStack with the following command:
+   ```sh
+   npm run test:ios:bs
+   ```
+
 ### Linter
 
 We use ESLint with the Prettier plugin to lint and auto-format TypeScript files. ESLint will auto-format code on every run.
