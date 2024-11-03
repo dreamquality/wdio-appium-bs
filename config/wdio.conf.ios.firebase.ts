@@ -4,14 +4,13 @@ import { Storage } from '@google-cloud/storage';
 import axios from 'axios';
 import { GoogleAuth } from 'google-auth-library';
 import path from 'path';
-import fs from 'fs';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 
-// Промисифицированный exec для создания архива
+// Promisified exec for creating the archive
 const execPromise = promisify(exec);
 
-// Загрузка переменных окружения
+// Load environment variables
 dotenv.config();
 
 const storage = new Storage();
@@ -32,7 +31,7 @@ export const config = {
       deviceName: 'iPhone 12',
       platformVersion: '15.0',
       automationName: 'XCUITest',
-      app: process.env.FIREBASE_IOS_APP_PATH, // Путь к вашему .ipa файлу
+      app: process.env.FIREBASE_IOS_APP_PATH, // Path to your .ipa file
       autoAcceptAlerts: true,
       autoDismissAlerts: true,
     },
@@ -42,26 +41,26 @@ export const config = {
     const bucketName = process.env.FIREBASE_BUCKET_NAME;
     const unresolvedIosAppPath = process.env.FIREBASE_IOS_APP_PATH;
     const iosAppPath = path.resolve(unresolvedIosAppPath);
-    const iosTestsZipPath = path.resolve('./ios-tests.zip'); // Архив с тестами
+    const iosTestsZipPath = path.resolve('./ios-tests.zip'); // Archive with entire project
     const bucket = storage.bucket(bucketName);
 
-    // Создание архива тестов
+    // Create archive of the entire project
     try {
-      console.log('Создание архива с тестами...');
-      await execPromise(`zip -r ${iosTestsZipPath} ./test`);
-      console.log('Архив с тестами создан:', iosTestsZipPath);
+      console.log('Creating project archive...');
+      await execPromise(`rm -f ${iosTestsZipPath} && zip -r ${iosTestsZipPath} ./*`);
+      console.log('Project archive created:', iosTestsZipPath);
     } catch (error) {
-      console.error('Ошибка при создании архива тестов:', error);
+      console.error('Error creating project archive:', error);
       throw error;
     }
 
-    // Загрузка .ipa и архива тестов в Google Cloud Storage
+    // Upload .ipa and project archive to Google Cloud Storage
     try {
       await bucket.upload(iosAppPath, { destination: `apps/${path.basename(iosAppPath)}` });
       await bucket.upload(iosTestsZipPath, { destination: `tests/${path.basename(iosTestsZipPath)}` });
-      console.log('Приложение и тесты загружены в Google Cloud Storage');
+      console.log('App and project files uploaded to Google Cloud Storage');
     } catch (error) {
-      console.error('Ошибка загрузки в Google Cloud Storage:', error);
+      console.error('Error uploading to Google Cloud Storage:', error);
       throw error;
     }
 
@@ -104,7 +103,7 @@ export const config = {
 
       console.log('Test Matrix ID:', response.data.testMatrixId);
     } catch (error) {
-      console.error('Ошибка создания тестовой матрицы:', error.message);
+      console.error('Error creating test matrix:', error.message);
       if (error.response) {
         console.error('Error response headers:', error.response.headers);
         console.error('Error response status:', error.response.status);
@@ -122,9 +121,9 @@ export const config = {
       const bucket = storage.bucket(bucketName);
       await bucket.file(`apps/${iosAppPath}`).delete();
       await bucket.file(`tests/${iosTestsZipPath}`).delete();
-      console.log(`Файлы приложения и тестов удалены из Google Cloud Storage.`);
+      console.log(`App and project files deleted from Google Cloud Storage.`);
     } catch (error) {
-      console.error('Ошибка удаления файлов из Google Cloud Storage:', error);
+      console.error('Error deleting files from Google Cloud Storage:', error);
       if (error.response) {
         console.error('Error response headers:', error.response.headers);
         console.error('Error response status:', error.response.status);
