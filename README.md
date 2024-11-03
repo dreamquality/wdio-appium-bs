@@ -1,5 +1,5 @@
 
-# e2e-tests: WebdriverIO v8, Appium v2, Hybrid App (Android & iOS), BrowserStack, Firebase
+# e2e-tests: WebdriverIO v8, Appium v2, Hybrid App (Android & iOS), BrowserStack
 
 Template for end-to-end testing with hybrid mobile applications.
 
