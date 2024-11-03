@@ -1,0 +1,1 @@
+[{"uid":"ed0a5f6214d981bd","name":"\"before all\" hook for My Login application","time":{"start":1730668889690,"stop":1730668889692,"duration":2},"status":"passed","severity":"normal"},{"uid":"e529569f25efa45a","name":"should sign up with valid credentials","time":{"start":1730668889692,"stop":1730668936373,"duration":46681},"status":"unknown","severity":"normal"}]
