@@ -1,0 +1,5 @@
+{
+  "error": "no such element",
+  "message": "no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//android.view.View[@content-desc='More than a swipe..']\"}\n  (Session info: chrome=114.0.5735.130)",
+  "stacktrace": "#0 0x55fa0c3304e3 <unknown>\n#1 0x55fa0c05fc76 <unknown>\n#2 0x55fa0c09bc96 <unknown>\n#3 0x55fa0c09bdc1 <unknown>\n#4 0x55fa0c0d57f4 <unknown>\n#5 0x55fa0c0bb03d <unknown>\n#6 0x55fa0c0d330e <unknown>\n#7 0x55fa0c0bade3 <unknown>\n#8 0x55fa0c0902dd <unknown>\n#9 0x55fa0c09134e <unknown>\n#10 0x55fa0c2f03e4 <unknown>\n#11 0x55fa0c2f43d7 <unknown>\n#12 0x55fa0c2feb20 <unknown>\n#13 0x55fa0c2f5023 <unknown>\n#14 0x55fa0c2c31aa <unknown>\n#15 0x55fa0c3196b8 <unknown>\n#16 0x55fa0c319847 <unknown>\n#17 0x55fa0c329243 <unknown>\n#18 0x7f365e00ee9e start_thread\n"
+}
