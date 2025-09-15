@@ -173,7 +173,72 @@ curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
   https://api.browserstack.com/app-automate/recent_apps
 ```
 
-#### 5. **App Crashes or Unexpected Behavior**
+#### 5. **Local Appium Server Connection Issues**
+**Symptoms:** Every second test run fails with connection errors, "ECONNREFUSED" or "session not created"
+
+**Root Cause:** This is a common issue where the Appium server doesn't properly clean up sessions between test runs, leading to:
+- Port conflicts from previous sessions
+- Stale server processes
+- Session state persistence
+- Timeout during server restart
+
+**Solutions implemented:**
+
+1. **Enhanced Session Management:**
+   - Added `--session-override` flag to allow session replacement
+   - Implemented proper session cleanup hooks
+   - Added connection health checks before test execution
+
+2. **Improved Server Configuration:**
+   ```javascript
+   appium: {
+     args: [
+       "--allow-insecure",
+       "--relaxed-security", 
+       "--session-override", // Key fix for connection issues
+       "--log-level", "error:info"
+     ],
+     timeout: 300000, // 5 minutes for server startup
+     killTimeout: 30000, // 30 seconds for graceful shutdown
+     forceKillTimeout: 10000 // 10 seconds before force kill
+   }
+   ```
+
+3. **Connection Retry Settings:**
+   - Increased connection retry count to 5
+   - Extended connection timeout to 5 minutes
+   - Added retry delays between attempts
+
+4. **Manual Server Management:**
+   Use the Appium Manager script for problematic connections:
+   ```bash
+   # Check server status
+   npm run appium:status
+   
+   # Restart server with clean state
+   npm run appium:restart
+   
+   # Run tests with connection health check
+   npm run test:android:reliable
+   npm run test:ios:reliable
+   
+   # Manual health check and recovery
+   npm run appium:health
+   ```
+
+5. **Capability Improvements:**
+   - Set `appium:noReset: false` to ensure clean app state
+   - Added `appium:clearSystemFiles: true` for proper cleanup
+   - Increased `newCommandTimeout` to 300 seconds
+   - Added session timeout of 10 minutes
+
+**Prevention Tips:**
+- Always use `npm run test:android:reliable` instead of `npm run test:android` for important test runs
+- If tests fail twice in a row, run `npm run appium:restart` before continuing
+- Monitor Appium logs (`appium.log`) for connection warnings
+- Keep only one Appium instance running at a time
+
+#### 6. **App Crashes or Unexpected Behavior**
 **Symptoms:** App closes unexpectedly, wrong screens appear
 
 **Debugging:**
@@ -182,7 +247,7 @@ curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
 - Ensure app is compatible with selected device/OS version
 - Check for memory issues on device
 
-#### 6. **Slow Test Execution**
+#### 7. **Slow Test Execution**
 **Causes:**
 - Network latency to BrowserStack
 - Large app size

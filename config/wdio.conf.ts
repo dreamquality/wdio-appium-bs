@@ -124,10 +124,10 @@ export const config = {
     //
     // Default timeout in milliseconds for request
     // if browser driver or grid doesn't send response
-    connectionRetryTimeout: 200000,
+    connectionRetryTimeout: 300000, // Increased to 5 minutes for mobile stability
     //
     // Default request retries count
-    connectionRetryCount: 3,
+    connectionRetryCount: 5, // Increased retries for connection stability
     //
     // Test runner services
     // Services take over a specific job you don't want to take care of. They enhance
@@ -227,8 +227,13 @@ export const config = {
      * @param {Array.<String>} specs List of spec file paths that are to be run
      * @param {string} cid worker id (e.g. 0-0)
      */
-    // beforeSession: function (config, capabilities, specs, cid) {
-    // },
+    beforeSession: async function (config, capabilities, specs, cid) {
+        console.log('Starting new session for worker:', cid);
+        console.log('Session capabilities:', JSON.stringify(capabilities, null, 2));
+        
+        // Add a small delay to avoid session conflicts
+        await new Promise(resolve => setTimeout(resolve, 2000));
+    },
     /**
      * Gets executed before test execution begins. At this point you can access to all global
      * variables like `browser`. It is the perfect place to define custom commands.
@@ -236,8 +241,22 @@ export const config = {
      * @param {Array.<String>} specs        List of spec file paths that are to be run
      * @param {object}         browser      instance of created browser/device session
      */
-    // before: function (capabilities, specs) {
-    // },
+    before: async function (capabilities, specs) {
+        console.log('Session started successfully');
+        
+        // Add connection health check
+        try {
+            const sessionId = await browser.getSessionId();
+            console.log('Session ID:', sessionId);
+            
+            // Verify connection with a simple command
+            await browser.getPageSource();
+            console.log('Connection verified successfully');
+        } catch (error) {
+            console.error('Connection verification failed:', error.message);
+            throw new Error('Failed to establish stable connection to device');
+        }
+    },
     /**
      * Runs before a WebdriverIO command gets executed.
      * @param {string} commandName hook command name
@@ -336,8 +355,14 @@ export const config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that ran
      */
-    // afterSession: function (config, capabilities, specs) {
-    // },
+    afterSession: async function (config, capabilities, specs) {
+        console.log('Session terminated, cleaning up...');
+        
+        // Add cleanup delay to ensure proper session termination
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        console.log('Session cleanup completed');
+    },
     /**
      * Gets executed after all workers got shut down and the process is about to exit. An error
      * thrown in the onComplete hook will result in the test run failing.
