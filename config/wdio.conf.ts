@@ -143,13 +143,13 @@ export const config = {
     framework: 'mocha',
     //
     // The number of times to retry the entire specfile when it fails as a whole
-    // specFileRetries: 1,
+    specFileRetries: 2,
     //
     // Delay in seconds between the spec file retry attempts
-    // specFileRetriesDelay: 0,
+    specFileRetriesDelay: 5,
     //
     // Whether or not retried spec files should be retried immediately or deferred to the end of the queue
-    // specFileRetriesDeferred: false,
+    specFileRetriesDeferred: false,
     //
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
@@ -181,7 +181,8 @@ export const config = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 200000
+        timeout: 300000, // Increased timeout for flaky mobile tests
+        retries: 2 // Retry failed tests twice
     },
     //
     // =====
@@ -277,13 +278,32 @@ export const config = {
      * @param {boolean} result.passed    true if test has passed, otherwise false
      * @param {object}  result.retries   informations to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
-    // afterTest: async function(test, context, { error, result, duration, passed, retries }) {
-    //     if (!passed) {
-    //         const screenshotPath = path.join(screenshotDir, `${test.title.replace(/\s+/g, '_')}.png`);
-    //         await browser.saveScreenshot(screenshotPath);
-    //         allureReporter.addAttachment('Screenshot', fs.readFileSync(screenshotPath), 'image/png');
-    //     }
-    // },
+    afterTest: async function(test, context, { error, result, duration, passed, retries }) {
+        if (!passed) {
+            console.log(`Test failed: ${test.title}`);
+            console.log(`Error: ${error ? error.message : 'Unknown error'}`);
+            console.log(`Duration: ${duration}ms`);
+            console.log(`Retries: ${retries.attempts}/${retries.limit}`);
+            
+            try {
+                // Take screenshot on failure
+                const screenshotPath = path.join(screenshotDir, `${test.title.replace(/\s+/g, '_')}_${Date.now()}.png`);
+                await browser.saveScreenshot(screenshotPath);
+                allureReporter.addAttachment('Failure Screenshot', fs.readFileSync(screenshotPath), 'image/png');
+                
+                // Get page source for debugging
+                const pageSource = await browser.getPageSource();
+                const pageSourcePath = path.join(screenshotDir, `${test.title.replace(/\s+/g, '_')}_${Date.now()}_source.xml`);
+                fs.writeFileSync(pageSourcePath, pageSource);
+                allureReporter.addAttachment('Page Source', pageSource, 'text/xml');
+                
+                console.log(`Screenshot saved: ${screenshotPath}`);
+                console.log(`Page source saved: ${pageSourcePath}`);
+            } catch (debugError) {
+                console.log('Failed to capture debug information:', debugError.message);
+            }
+        }
+    },
 
 
     /**

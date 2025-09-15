@@ -25,7 +25,13 @@
     "test:ios": "wdio run ./config/wdio.conf.ios.ts",
     "test:ios:bs": "wdio run ./config/wdio.conf.ios.bs.ts",
     "allure": "npx allure serve ./reporters/allure-results",
-    "allure:generate": "npx allure generate ./reporters/allure-results --clean"
+    "allure:generate": "npx allure generate ./reporters/allure-results --clean",
+    "debug": "node scripts/debug.js",
+    "debug:env": "node scripts/debug.js env",
+    "debug:connection": "node scripts/debug.js connection",
+    "debug:apps": "node scripts/debug.js apps",
+    "debug:sessions": "node scripts/debug.js sessions",
+    "debug:all": "node scripts/debug.js all"
   },
   "dependencies": {
     "@wdio/spec-reporter": "^8.15.0",

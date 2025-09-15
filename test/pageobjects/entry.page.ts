@@ -5,11 +5,11 @@ import Page from './page.js';
 // const countryOfResidenceInputPicker = "//android.widget.EditText[@text='Enter country name']"
 // const countryOptionSg = "//android.view.ViewGroup[@resource-id='country-selector-SG']"
 
-const logo = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.widget.ImageView[1]"
+// const logo = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.widget.ImageView[1]"
 const entryTitle = "//android.view.View[@content-desc='More than a swipe..']"
 const signUpBtn = "//android.widget.Button[@content-desc='Sign Up']";
 const signInWithFacebookBtn = "~Sign in with Facebook";
-const signInWithPhoneNumberBtn = "~Sign in with Phone number";
+// const signInWithPhoneNumberBtn = "~Sign in with Phone number";
 
 
 
@@ -34,8 +34,18 @@ class Entry extends Page {
   }
   
   public async waitUntilEntryTitleDisplayed(element: string): Promise<void> {
-    browser.isAndroid ? await this.waitUntilElementDisplayed(entryTitle) :
-    await this.waitUntilElementDisplayed(element); //another locator is used due to original locator doesn't work
+    try {
+      if (browser.isAndroid) {
+        await this.waitUntilElementDisplayed(entryTitle, 20000);
+      } else {
+        await this.waitUntilElementDisplayed(element, 20000);
+      }
+    } catch (error) {
+      console.log('Entry title wait timeout, app may still be loading');
+      // Take a screenshot for debugging
+      await this.takeDebugScreenshot('entry_title_wait_failed');
+      throw error;
+    }
   }
 
 
@@ -45,8 +55,18 @@ class Entry extends Page {
   }
 
   public async waitUntilSignUpDisplayed(btnIos: string): Promise<void> {
-    browser.isAndroid ? await this.waitUntilElementDisplayed(signUpBtn) :
-    await this.waitUntilElementDisplayed(btnIos);
+    try {
+      if (browser.isAndroid) {
+        await this.waitUntilElementDisplayed(signUpBtn, 20000);
+      } else {
+        await this.waitUntilElementDisplayed(btnIos, 20000);
+      }
+    } catch (error) {
+      console.log('Sign up button wait timeout');
+      // Take a screenshot for debugging
+      await this.takeDebugScreenshot('signup_button_wait_failed');
+      throw error;
+    }
   }
 
   public async getSignUpButtonText( element: string): Promise<string> {
@@ -54,9 +74,18 @@ class Entry extends Page {
     await this.getElementText(element);
   }
    
-  public async clickSignUpButton( element: string): Promise<void> {
-   browser.isAndroid ? await this.clickElement(signUpBtn) :
-   await this.clickElement(element);
+  public async clickSignUpButton(element: string): Promise<void> {
+    try {
+      if (browser.isAndroid) {
+        await this.clickElement(signUpBtn);
+      } else {
+        await this.clickElement(element);
+      }
+    } catch (error) {
+      console.log('Failed to click sign up button:', (error as Error).message);
+      await this.takeDebugScreenshot('signup_click_failed');
+      throw error;
+    }
   }
 
   public async isSignUpBtnClickable( element: string): Promise<boolean> {
