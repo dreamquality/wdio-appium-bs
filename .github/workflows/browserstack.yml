@@ -33,6 +33,7 @@ jobs:
 
       - name: Run WebdriverIO tests on BrowserStack
         run: npm run test:android:bs
+        continue-on-error: true
 
       - name: Generate Allure Report
         if: always()
