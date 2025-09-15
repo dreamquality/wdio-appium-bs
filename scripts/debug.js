@@ -14,15 +14,23 @@ dotenv.config();
 const BROWSERSTACK_USERNAME = process.env.BROWSERSTACK_USERNAME;
 const BROWSERSTACK_ACCESS_KEY = process.env.BROWSERSTACK_ACCESS_KEY;
 
-if (!BROWSERSTACK_USERNAME || !BROWSERSTACK_ACCESS_KEY) {
+const hasCredentials = BROWSERSTACK_USERNAME && BROWSERSTACK_ACCESS_KEY;
+
+if (!hasCredentials && process.argv[2] && !['env', 'help'].includes(process.argv[2])) {
     console.error('❌ BrowserStack credentials not found in .env file');
     console.log('Please set BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY');
+    console.log('Run "npm run debug:env" to check your environment setup');
     process.exit(1);
 }
 
-const auth = Buffer.from(`${BROWSERSTACK_USERNAME}:${BROWSERSTACK_ACCESS_KEY}`).toString('base64');
+const auth = hasCredentials ? Buffer.from(`${BROWSERSTACK_USERNAME}:${BROWSERSTACK_ACCESS_KEY}`).toString('base64') : null;
 
 async function checkBrowserStackConnection() {
+    if (!hasCredentials) {
+        console.log('❌ Cannot check BrowserStack connection - credentials not set');
+        return false;
+    }
+    
     try {
         console.log('🔍 Checking BrowserStack connection...');
         const response = await axios.get('https://api.browserstack.com/app-automate/plan.json', {
@@ -42,6 +50,11 @@ async function checkBrowserStackConnection() {
 }
 
 async function listRecentApps() {
+    if (!hasCredentials) {
+        console.log('❌ Cannot list apps - credentials not set');
+        return;
+    }
+    
     try {
         console.log('📱 Fetching recent uploaded apps...');
         const response = await axios.get('https://api.browserstack.com/app-automate/recent_apps', {
@@ -69,6 +82,11 @@ async function listRecentApps() {
 }
 
 async function listRecentSessions() {
+    if (!hasCredentials) {
+        console.log('❌ Cannot list sessions - credentials not set');
+        return;
+    }
+    
     try {
         console.log('📊 Fetching recent test sessions...');
         const response = await axios.get('https://api.browserstack.com/app-automate/builds.json', {
@@ -181,12 +199,14 @@ async function main() {
         case 'all':
             await checkEnvironment();
             console.log('\n');
-            if (BROWSERSTACK_USERNAME && BROWSERSTACK_ACCESS_KEY) {
+            if (hasCredentials) {
                 await checkBrowserStackConnection();
                 console.log('\n');
                 await listRecentApps();
                 console.log('\n');
                 await listRecentSessions();
+            } else {
+                console.log('⚠️  Skipping BrowserStack checks - credentials not configured');
             }
             break;
         default:
