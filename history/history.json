@@ -1,1 +1,1 @@
-{}
+{"c65a8893cdc671f2a402049aa96a89b8":{"statistic":{"failed":0,"broken":1,"skipped":0,"passed":0,"unknown":0,"total":1},"items":[{"uid":"4534ad372363f39","status":"broken","statusDetails":"Element //android.widget.Button[@content-desc='Sign Up'] not displayed within 10000ms","time":{"start":1760623357928,"stop":1760623399508,"duration":41580}}]}}
