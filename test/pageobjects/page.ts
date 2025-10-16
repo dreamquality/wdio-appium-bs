@@ -13,12 +13,12 @@ export default class Page {
       await browser.url(path);
     }
 
-    public async getElement(element: string): Promise<WebdriverIO.Element> {
-      return $(element);
+    public async getElement(element: string) {
+      return await $(element);
     }
   
-    public async getAllElements(element: string): Promise<WebdriverIO.Element[]> {
-      return $$(element);
+    public async getAllElements(element: string) {
+      return await $$(element);
     }
   
     public async getListSize(element: string): Promise<number> {
@@ -31,7 +31,7 @@ export default class Page {
       return outerHTML.getHTML();
     }
   
-    public async getElementByIndex(element: string, index: number): Promise<WebdriverIO.Element> {
+    public async getElementByIndex(element: string, index: number) {
       const elements = await this.getAllElements(element); 
       return elements[index]; 
     }
@@ -334,7 +334,7 @@ export default class Page {
     /**
      * Safely get element with retry mechanism
      */
-    public async getElementSafely(element: string, timeout: number = 10000): Promise<WebdriverIO.Element | null> {
+    public async getElementSafely(element: string, timeout: number = 10000) {
       try {
         await this.waitUntilElementDisplayed(element, timeout);
         return await this.getElement(element);

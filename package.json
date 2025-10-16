@@ -13,13 +13,16 @@
     "@wdio/junit-reporter": "^9.20.0",
     "@wdio/local-runner": "^9.20.0",
     "@wdio/mocha-framework": "^9.20.0",
+    "allure-commandline": "^2.30.0",
     "appium": "^3.1.0",
+    "appium-uiautomator2-driver": "^5.0.5",
+    "appium-xcuitest-driver": "^10.2.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.0",
-    "wdio-wait-for": "^3.0.6",
-    "allure-commandline": "^2.30.0"
+    "wdio-wait-for": "^3.0.6"
   },
   "scripts": {
+    "postinstall": "npx appium driver install uiautomator2 && npx appium driver install xcuitest || echo 'Drivers installation completed'",
     "test:android:bs": "wdio run ./config/wdio.conf.android.bs.ts",
     "test:android": "wdio run ./config/wdio.conf.android.ts",
     "test:ios": "wdio run ./config/wdio.conf.ios.ts",
