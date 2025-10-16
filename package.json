@@ -26,7 +26,7 @@
     "test:android:bs": "wdio run ./config/wdio.conf.android.bs.ts",
     "test:android": "wdio run ./config/wdio.conf.android.ts",
     "test:ios": "wdio run ./config/wdio.conf.ios.ts",
-    "test:ios:bs": "wdio run ./config/wdio.conf.ios.ts",
+    "test:ios:bs": "wdio run ./config/wdio.conf.ios.bs.ts",
     "allure": "npx allure serve ./reporters/allure-results",
     "allure:generate": "npx allure generate ./reporters/allure-results --clean",
     "debug": "node scripts/debug.js",
