@@ -58,7 +58,7 @@ class AppiumManager {
         return new Promise((resolve, reject) => {
             const args = [
                 '--port', this.port.toString(),
-                '--allow-insecure',
+                '--allow-insecure=uiautomator2:chromedriver_autodownload,xcuitest:get_server_logs,xcuitest:chromedriver_autodownload',
                 '--relaxed-security',
                 '--session-override',
                 '--log-level', 'error:info',
