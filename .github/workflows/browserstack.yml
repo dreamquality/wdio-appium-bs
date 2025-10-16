@@ -10,26 +10,29 @@ jobs:
     timeout-minutes: 60
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '20.19.0'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
+        env:
+          APPIUM_SKIP_CHROMEDRIVER_INSTALL: 1
+
+      - name: Verify Appium 3 installation
+        run: |
+          npx appium --version
+          npx appium driver list
 
       - name: Create .env file for BrowserStack
         run: |
           echo "BROWSERSTACK_USERNAME=${{ secrets.BROWSERSTACK_USERNAME }}" >> .env
           echo "BROWSERSTACK_ACCESS_KEY=${{ secrets.BROWSERSTACK_ACCESS_KEY }}" >> .env
-          echo "BROWSERSTACK_ANDROID_APP_ID=${{ secrets.BROWSERSTACK_APP_ID }}" >> .env
-
-      - name: Install Appium and dependencies
-        run: |
-          npm install -g appium
-          npm install -g @appium/doctor
-          appium-doctor --android # Проверка конфигурации для Android
+          echo "BROWSERSTACK_ANDROID_APP_ID=${{ secrets.BROWSERSTACK_ANDROID_APP_ID }}" >> .env
+          echo "BROWSERSTACK_IOS_APP_ID=${{ secrets.BROWSERSTACK_IOS_APP_ID }}" >> .env
 
       - name: Run WebdriverIO tests on BrowserStack
         run: npm run test:android:bs
@@ -38,6 +41,7 @@ jobs:
       - name: Generate Allure Report
         if: always()
         run: npm run allure:generate
+        continue-on-error: true
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -47,7 +51,7 @@ jobs:
 
       - name: Deploy report to Github Pages
         if: always()
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
