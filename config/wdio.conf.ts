@@ -120,7 +120,7 @@ export const config = {
     // gets prepended directly.
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 30000,
+    waitforTimeout: 10000, // Reduced from 30s to 10s for faster failures
     //
     // Default timeout in milliseconds for request
     // if browser driver or grid doesn't send response
@@ -143,10 +143,10 @@ export const config = {
     framework: 'mocha',
     //
     // The number of times to retry the entire specfile when it fails as a whole
-    specFileRetries: 2,
+    specFileRetries: 1, // Reduced from 2 to 1 for faster failures
     //
     // Delay in seconds between the spec file retry attempts
-    specFileRetriesDelay: 5,
+    specFileRetriesDelay: 3, // Reduced from 5 to 3 seconds
     //
     // Whether or not retried spec files should be retried immediately or deferred to the end of the queue
     specFileRetriesDeferred: false,
@@ -181,8 +181,8 @@ export const config = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 300000, // Increased timeout for flaky mobile tests
-        retries: 2 // Retry failed tests twice
+        timeout: 120000, // Reduced from 300s (5 min) to 120s (2 min) for faster failures
+        retries: 1 // Reduced from 2 to 1 retry for faster failures
     },
     //
     // =====

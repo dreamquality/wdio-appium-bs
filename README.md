@@ -1,5 +1,5 @@
 
-# e2e-tests: WebdriverIO v8, Appium v2, Hybrid App (Android & iOS), BrowserStack
+# e2e-tests: WebdriverIO v9, Appium v3, Hybrid App (Android & iOS), BrowserStack
 
 Template for end-to-end testing with hybrid mobile applications.
 
@@ -7,11 +7,20 @@ Template for end-to-end testing with hybrid mobile applications.
 
 ### Install Required Software and Project Checkout
 
-1. Download and install [Node.js](https://nodejs.org/) (version 16.17 or higher).
+1. Download and install [Node.js](https://nodejs.org/) (version 20.19 or higher).
 2. Install TypeScript (version 5 or higher).
 3. Install Visual Studio Code.
 4. Clone the GitHub project repository.
 5. Run `npm install` to install project dependencies.
+6. Install Appium 3 globally:
+   ```sh
+   npm install -g appium@latest
+   ```
+7. Install necessary Appium drivers:
+   ```sh
+   appium driver install uiautomator2
+   appium driver install xcuitest
+   ```
 
 ## BrowserStack Configuration
 
@@ -32,14 +41,14 @@ Template for end-to-end testing with hybrid mobile applications.
 To run Android tests on a Windows machine, ensure the following setup:
 
 1. Install the latest version of [Java](https://www.java.com/download/manual.jsp) and set the `JAVA_HOME` environment variable to the JRE directory (e.g., `C:\Program Files\Android\Android Studio\jre\`).
-2. Install [Node.js](https://nodejs.org/) version 16 or higher.
+2. Install [Node.js](https://nodejs.org/) version 20.19 or higher.
 3. Install the latest version of [Android Studio](https://developer.android.com/studio).
 4. Add `ANDROID_HOME` to your system environment variables.
-5. Install Appium globally:
+5. Install Appium 3 globally:
    ```sh
-   npm install -g appium
+   npm install -g appium@latest
    ```
-6. Download [Appium Inspector](https://github.com/appium/appium-inspector/releases) (version 2 or higher).
+6. Download [Appium Inspector](https://github.com/appium/appium-inspector/releases) (latest version compatible with Appium 3).
 7. Install necessary Appium drivers:
    ```sh
    appium driver install uiautomator2
@@ -70,7 +79,7 @@ To run iOS tests with BrowserStack or locally, ensure the following setup:
    ```
 4. Set up Appium for iOS testing:
    ```sh
-   npm install -g appium
+   npm install -g appium@latest
    appium driver install xcuitest
    ```
 5. Connect an iOS device via USB and enable **Developer Mode** on the device (found in **Settings > Privacy & Security > Developer Mode** on iOS 16+).

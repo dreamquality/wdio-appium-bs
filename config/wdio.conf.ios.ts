@@ -11,7 +11,7 @@ export const config = {
       // For options see
       // https://github.com/webdriverio/webdriverio/tree/master/packages/wdio-appium-service
       args: [
-        "--allow-insecure",
+        "--allow-insecure=xcuitest:get_server_logs,xcuitest:chromedriver_autodownload",
         "--relaxed-security",
         "--session-override", // Allow session override for better connection stability
         "--log-level", "error:info" // Reduce log noise but keep important info

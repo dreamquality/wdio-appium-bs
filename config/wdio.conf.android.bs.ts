@@ -12,17 +12,11 @@ export const config = {
           deviceName: 'Samsung Galaxy S22 Ultra',
           osVersion: '12.0',
           deviceOrientation: 'portrait',
-          // Add stability configurations
-          acceptInsecureCerts: true,
+        },
+        'appium:options': {
           autoAcceptAlerts: true,
           autoGrantPermissions: true,
           newCommandTimeout: 300000, // 5 minutes
-          commandTimeouts: {
-            default: 60000,
-            implicit: 30000,
-            pageLoad: 60000,
-            script: 60000
-          }
         }
       }],
     services: [
