@@ -12,6 +12,10 @@ export const config = {
           deviceName: 'iPhone 14 Pro Max',
           osVersion: '16',
           deviceOrientation: 'portrait',
+        },
+        'appium:options': {
+          autoAcceptAlerts: true,
+          newCommandTimeout: 300000, // 5 minutes
         }
       }],
     services: [
