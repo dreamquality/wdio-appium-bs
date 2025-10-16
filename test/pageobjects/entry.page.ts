@@ -36,9 +36,9 @@ class Entry extends Page {
   public async waitUntilEntryTitleDisplayed(element: string): Promise<void> {
     try {
       if (browser.isAndroid) {
-        await this.waitUntilElementDisplayed(entryTitle, 20000);
+        await this.waitUntilElementDisplayed(entryTitle, 10000); // Reduced from 20s to 10s
       } else {
-        await this.waitUntilElementDisplayed(element, 20000);
+        await this.waitUntilElementDisplayed(element, 10000); // Reduced from 20s to 10s
       }
     } catch (error) {
       console.log('Entry title wait timeout, app may still be loading');
@@ -57,9 +57,9 @@ class Entry extends Page {
   public async waitUntilSignUpDisplayed(btnIos: string): Promise<void> {
     try {
       if (browser.isAndroid) {
-        await this.waitUntilElementDisplayed(signUpBtn, 20000);
+        await this.waitUntilElementDisplayed(signUpBtn, 10000); // Reduced from 20s to 10s
       } else {
-        await this.waitUntilElementDisplayed(btnIos, 20000);
+        await this.waitUntilElementDisplayed(btnIos, 10000); // Reduced from 20s to 10s
       }
     } catch (error) {
       console.log('Sign up button wait timeout');

@@ -77,7 +77,7 @@ export default class Page {
     }
   
   
-    public async waitUntilElementDisplayed(element: string, timeout: number = 30000): Promise<void> {
+    public async waitUntilElementDisplayed(element: string, timeout: number = 10000): Promise<void> {
       try {
         await browser.waitUntil(async () => {
           try {
@@ -96,7 +96,7 @@ export default class Page {
       }
     }
   
-    public async waitUntilElementByIndexDisplayed(element: string, index: number, timeout: number = 30000): Promise<void> {
+    public async waitUntilElementByIndexDisplayed(element: string, index: number, timeout: number = 10000): Promise<void> {
       try {
         await browser.waitUntil(async () => {
           try {
@@ -347,7 +347,7 @@ export default class Page {
     /**
      * Smart wait for any of multiple elements to appear
      */
-    public async waitForAnyElement(elements: string[], timeout: number = 30000): Promise<string | null> {
+    public async waitForAnyElement(elements: string[], timeout: number = 10000): Promise<string | null> {
       try {
         return await browser.waitUntil(async () => {
           for (const element of elements) {
