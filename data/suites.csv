@@ -1,2 +1,2 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","48368","should sign up with valid credentials","My Login application","Thu Oct 16 14:27:44 UTC 2025","broken","Thu Oct 16 14:28:32 UTC 2025","","","",""
+"","51481","should sign up with valid credentials","My Login application","Thu Oct 16 14:29:53 UTC 2025","broken","Thu Oct 16 14:30:44 UTC 2025","","","",""
