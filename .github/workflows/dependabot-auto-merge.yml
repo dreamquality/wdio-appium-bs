@@ -1,0 +1,65 @@
+name: Dependabot Pull Request Approve and Merge
+
+on: pull_request_target
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    # Checking the actor will prevent your Action run failing on non-Dependabot
+    # PRs but also ensures that it only does work for Dependabot PRs.
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    steps:
+      # This first step will fail if there's no metadata and so the approval
+      # will not occur.
+      - name: Dependabot Metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v2.4.0
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      # Here the PR gets approved.
+      - name: Approve a PR
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Finally, this sets the PR to allow auto-merging for patch and minor
+      # updates if all checks pass
+      - name: Wait for required status checks
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+            const ref = pr.data.head.sha;
+            let checksPassed = false;
+            let attempts = 0;
+            while (!checksPassed && attempts < 30) {
+              const { data: status } = await github.rest.repos.getCombinedStatusForRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: ref
+              });
+              checksPassed = status.state === 'success';
+              if (!checksPassed) {
+                console.log(`Waiting for status checks to pass...`);
+                await new Promise(r => setTimeout(r, 20000)); // wait 20 seconds
+                attempts++;
+              }
+            }
+            if (!checksPassed) {
+              throw new Error('Required status checks did not pass in time.');
+            }
+      - name: Enable Auto-Merge for Dependabot PRs
+        if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
