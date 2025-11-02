@@ -158,14 +158,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download Android Allure Report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: allure-report-android
           path: allure-report-android/
         continue-on-error: true
 
       - name: Download iOS Allure Report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: allure-report-ios
           path: allure-report-ios/
