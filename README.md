@@ -182,6 +182,41 @@ curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
   https://api.browserstack.com/app-automate/recent_apps
 ```
 
+**BrowserStack Timeout/Expiration Detection:**
+
+The framework now automatically detects when BrowserStack testing time has expired or limits have been exceeded. When such errors occur:
+
+1. **Automatic Detection:** The error handler identifies BrowserStack-specific errors including:
+   - "Automate Plan Expired"
+   - "Account limit exceeded"
+   - "Parallel limit exceeded"
+   - Other BrowserStack timeout/session errors
+
+2. **Allure Report Integration:** When detected, the error is clearly marked in the Allure report with:
+   - Special label: `BROWSERSTACK_TIME_EXPIRED`
+   - Detailed description explaining the issue
+   - Actionable steps to resolve the problem
+   - Error details in JSON format for debugging
+
+3. **Console Output:** Console logs will show:
+   ```
+   ⚠️  BrowserStack timeout/expiration detected
+   BrowserStack error details added to Allure report
+   ```
+
+4. **Viewing the Error in Allure:**
+   After running tests, generate and view the Allure report:
+   ```bash
+   npm run allure
+   ```
+   Failed tests with BrowserStack expiration will have a clear indicator and detailed information.
+
+**Example Error Messages Detected:**
+- "Automate plan has expired"
+- "Account limit exceeded"
+- "Session limit reached"
+- "Parallel execution limit exceeded"
+
 #### 5. **Local Appium Server Connection Issues**
 **Symptoms:** Every second test run fails with connection errors, "ECONNREFUSED" or "session not created"
 
