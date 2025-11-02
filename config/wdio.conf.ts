@@ -344,11 +344,11 @@ export const config = {
                 fullErrorText.includes('account limit exceeded') ||
                 fullErrorText.includes('parallel limit') ||
                 fullErrorText.includes('session limit') ||
-                fullErrorText.includes('browserstack') && (
+                (fullErrorText.includes('browserstack') && (
                     fullErrorText.includes('timeout') ||
                     fullErrorText.includes('expired') ||
                     fullErrorText.includes('limit exceeded')
-                );
+                ));
             
             if (isBrowserStackTimeoutError) {
                 console.log('⚠️  BrowserStack timeout/expiration detected');
