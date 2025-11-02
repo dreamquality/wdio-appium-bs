@@ -254,6 +254,35 @@ export const config = {
             console.log('Connection verified successfully');
         } catch (error) {
             console.error('Connection verification failed:', error.message);
+            
+            // Check for BrowserStack-specific errors during session creation
+            const errorMessage = error.message.toLowerCase();
+            if (errorMessage.includes('automate plan expired') ||
+                errorMessage.includes('plan expired') ||
+                errorMessage.includes('account limit exceeded') ||
+                errorMessage.includes('parallel limit') ||
+                errorMessage.includes('session limit')) {
+                
+                console.error('⚠️  BrowserStack account issue detected:');
+                console.error('   - Testing time/minutes may have expired');
+                console.error('   - Account limits may be exceeded');
+                console.error('   - Please check your BrowserStack account status');
+                
+                allureReporter.addLabel('issue', 'BROWSERSTACK_SESSION_FAILED');
+                allureReporter.addDescription(
+                    `🚨 **BrowserStack Session Creation Failed**\n\n` +
+                    `Failed to establish connection to BrowserStack due to account limitations.\n\n` +
+                    `**Error:** ${error.message}\n\n` +
+                    `**Possible Causes:**\n` +
+                    `- BrowserStack testing time/minutes expired\n` +
+                    `- Account limit exceeded\n` +
+                    `- Parallel session limit reached\n` +
+                    `- Plan requires renewal\n\n` +
+                    `**Action Required:** Check BrowserStack account status and plan limits`,
+                    'markdown'
+                );
+            }
+            
             throw new Error('Failed to establish stable connection to device');
         }
     },
@@ -304,6 +333,66 @@ export const config = {
             console.log(`Duration: ${duration}ms`);
             console.log(`Retries: ${retries.attempts}/${retries.limit}`);
             
+            // Check for BrowserStack-specific timeout/expiration errors
+            const errorMessage = error ? error.message : '';
+            const errorStack = error ? error.stack : '';
+            const fullErrorText = `${errorMessage} ${errorStack}`.toLowerCase();
+            
+            const isBrowserStackTimeoutError = 
+                fullErrorText.includes('automate plan expired') ||
+                fullErrorText.includes('plan expired') ||
+                fullErrorText.includes('account limit exceeded') ||
+                fullErrorText.includes('parallel limit') ||
+                fullErrorText.includes('session limit') ||
+                fullErrorText.includes('browserstack') && (
+                    fullErrorText.includes('timeout') ||
+                    fullErrorText.includes('expired') ||
+                    fullErrorText.includes('limit exceeded')
+                );
+            
+            if (isBrowserStackTimeoutError) {
+                console.log('⚠️  BrowserStack timeout/expiration detected');
+                
+                // Add detailed information to Allure report
+                allureReporter.addLabel('testType', 'browserstack_timeout');
+                allureReporter.addLabel('issue', 'BROWSERSTACK_TIME_EXPIRED');
+                allureReporter.addDescription(
+                    `🚨 **BrowserStack Testing Time Expired**\n\n` +
+                    `This test failed because the BrowserStack account testing time has expired or limit was exceeded.\n\n` +
+                    `**Error Details:**\n\`\`\`\n${errorMessage}\n\`\`\`\n\n` +
+                    `**Action Required:**\n` +
+                    `- Check BrowserStack account status and plan limits\n` +
+                    `- Verify account has sufficient testing minutes remaining\n` +
+                    `- Review parallel session limits\n\n` +
+                    `**Duration:** ${duration}ms\n` +
+                    `**Retries:** ${retries.attempts}/${retries.limit}`,
+                    'markdown'
+                );
+                
+                // Add error details as attachment
+                const errorDetails = {
+                    testName: test.title,
+                    errorMessage: errorMessage,
+                    duration: duration,
+                    retries: retries,
+                    timestamp: new Date().toISOString(),
+                    errorType: 'BrowserStack Timeout/Expiration',
+                    possibleCauses: [
+                        'Testing time/minutes expired on BrowserStack account',
+                        'Account limit exceeded',
+                        'Parallel session limit reached',
+                        'Plan expired or requires renewal'
+                    ]
+                };
+                allureReporter.addAttachment(
+                    'BrowserStack Error Details',
+                    JSON.stringify(errorDetails, null, 2),
+                    'application/json'
+                );
+                
+                console.log('BrowserStack error details added to Allure report');
+            }
+            
             try {
                 // Take screenshot on failure
                 const screenshotPath = path.join(screenshotDir, `${test.title.replace(/\s+/g, '_')}_${Date.now()}.png`);
@@ -320,6 +409,16 @@ export const config = {
                 console.log(`Page source saved: ${pageSourcePath}`);
             } catch (debugError) {
                 console.log('Failed to capture debug information:', debugError.message);
+                
+                // If debug capture fails, it might be due to BrowserStack session issues
+                if (isBrowserStackTimeoutError || debugError.message.toLowerCase().includes('session')) {
+                    console.log('⚠️  Session-related error - likely BrowserStack connection issue');
+                    allureReporter.addAttachment(
+                        'Debug Capture Error',
+                        `Failed to capture debug information due to session issues:\n${debugError.message}\n\nThis often indicates BrowserStack session timeout or connection problems.`,
+                        'text/plain'
+                    );
+                }
             }
         }
     },
