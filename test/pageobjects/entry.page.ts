@@ -48,6 +48,15 @@ class Entry extends Page {
     }
   }
 
+  public async getEntryTitleText(entryTitleIos: string): Promise<string> {
+    return browser.isAndroid ? await this.getElementText(entryTitle) :
+    await this.getElementText(entryTitleIos);
+  }
+
+  public async isEntryTitleClickable(entryTitleIos: string): Promise<boolean> {
+    return browser.isAndroid ? await this.isElementClickable(entryTitle) :
+    await this.isElementClickable(entryTitleIos);
+  }
 
   public async isSignUpButtonDisplayed(iosBtn: string): Promise<boolean> {
     return browser.isAndroid ? await this.isElementDisplayed(signUpBtn) :
@@ -94,12 +103,26 @@ class Entry extends Page {
   await this.isElementClickable(element);
   }
 
+  public async scrollSignUpButtonIntoView(element: string): Promise<void> {
+    if (browser.isAndroid) {
+      await this.scrollElementIntoView(signUpBtn);
+    } else {
+      await this.scrollElementIntoView(element);
+    }
+  }
+
   public async isSignInWithFacebookBtnDisplayed(): Promise<boolean> {
     return this.isElementDisplayed(signInWithFacebookBtn);
   }
 
   public async waitUntilSignInWithFacebookBtnDisplayed(): Promise<void> {
-    await this.waitUntilElementDisplayed(signInWithFacebookBtn);
+    try {
+      await this.waitUntilElementDisplayed(signInWithFacebookBtn, 10000);
+    } catch (error) {
+      console.log('Sign in with Facebook button wait timeout');
+      await this.takeDebugScreenshot('facebook_button_wait_failed');
+      throw error;
+    }
   }
 
   public async getSignInWithFacebookBtnText(): Promise<string> {
@@ -107,7 +130,29 @@ class Entry extends Page {
   }
 
   public async clickSignInWithFacebookBtn(): Promise<void> {
-    await this.clickElement(signInWithFacebookBtn);
+    try {
+      await this.clickElement(signInWithFacebookBtn);
+    } catch (error) {
+      console.log('Failed to click sign in with Facebook button:', (error as Error).message);
+      await this.takeDebugScreenshot('facebook_click_failed');
+      throw error;
+    }
+  }
+
+  public async isSignInWithFacebookBtnClickable(): Promise<boolean> {
+    return await this.isElementClickable(signInWithFacebookBtn);
+  }
+
+  public async scrollSignInWithFacebookBtnIntoView(): Promise<void> {
+    await this.scrollElementIntoView(signInWithFacebookBtn);
+  }
+
+  public async scrollEntryTitleIntoView(entryTitleIos: string): Promise<void> {
+    if (browser.isAndroid) {
+      await this.scrollElementIntoView(entryTitle);
+    } else {
+      await this.scrollElementIntoView(entryTitleIos);
+    }
   }
 
   // public async isInputDisplayed(index: number, element: string): Promise<boolean> {
