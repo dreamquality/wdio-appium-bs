@@ -1,5 +1,6 @@
 import { browser } from '@wdio/globals'
 import allureReporter from '@wdio/allure-reporter'
+import { Status } from 'allure-js-commons'
 import Page from './page.js';
 
 // const logo = "//*[contains(@resource-id, 'logo')]";
@@ -37,7 +38,7 @@ class Entry extends Page {
       allureReporter.endStep();
       return result;
     } catch (error) {
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -55,7 +56,7 @@ class Entry extends Page {
       console.log('Entry title wait timeout, app may still be loading');
       // Take a screenshot for debugging
       await this.takeDebugScreenshot('entry_title_wait_failed');
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -68,7 +69,7 @@ class Entry extends Page {
       allureReporter.endStep();
       return text;
     } catch (error) {
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -81,7 +82,7 @@ class Entry extends Page {
       allureReporter.endStep();
       return result;
     } catch (error) {
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -94,7 +95,7 @@ class Entry extends Page {
       allureReporter.endStep();
       return result;
     } catch (error) {
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -112,7 +113,7 @@ class Entry extends Page {
       console.log('Sign up button wait timeout');
       // Take a screenshot for debugging
       await this.takeDebugScreenshot('signup_button_wait_failed');
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -125,7 +126,7 @@ class Entry extends Page {
       allureReporter.endStep();
       return text;
     } catch (error) {
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -142,7 +143,7 @@ class Entry extends Page {
     } catch (error) {
       console.log('Failed to click sign up button:', (error as Error).message);
       await this.takeDebugScreenshot('signup_click_failed');
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -156,7 +157,7 @@ class Entry extends Page {
       allureReporter.endStep();
       return result;
     } catch (error) {
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -171,7 +172,7 @@ class Entry extends Page {
       }
       allureReporter.endStep();
     } catch (error) {
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -183,7 +184,7 @@ class Entry extends Page {
       allureReporter.endStep();
       return result;
     } catch (error) {
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -196,7 +197,7 @@ class Entry extends Page {
     } catch (error) {
       console.log('Sign in with Facebook button wait timeout');
       await this.takeDebugScreenshot('facebook_button_wait_failed');
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -208,7 +209,7 @@ class Entry extends Page {
       allureReporter.endStep();
       return text;
     } catch (error) {
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -221,7 +222,7 @@ class Entry extends Page {
     } catch (error) {
       console.log('Failed to click sign in with Facebook button:', (error as Error).message);
       await this.takeDebugScreenshot('facebook_click_failed');
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -233,7 +234,7 @@ class Entry extends Page {
       allureReporter.endStep();
       return result;
     } catch (error) {
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -244,7 +245,7 @@ class Entry extends Page {
       await this.scrollElementIntoView(signInWithFacebookBtn);
       allureReporter.endStep();
     } catch (error) {
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
@@ -259,7 +260,7 @@ class Entry extends Page {
       }
       allureReporter.endStep();
     } catch (error) {
-      allureReporter.endStep('failed');
+      allureReporter.endStep(Status.FAILED);
       throw error;
     }
   }
