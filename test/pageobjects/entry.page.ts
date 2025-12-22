@@ -117,7 +117,7 @@ class Entry extends Page {
     }
   }
 
-  public async getSignUpButtonText( element: string): Promise<string> {
+  public async getSignUpButtonText(element: string): Promise<string> {
     allureReporter.startStep('Get sign up button text');
     try {
       const text = browser.isAndroid ? await this.getElementText(signUpBtn) :
@@ -147,7 +147,7 @@ class Entry extends Page {
     }
   }
 
-  public async isSignUpBtnClickable( element: string): Promise<boolean> {
+  public async isSignUpBtnClickable(element: string): Promise<boolean> {
     allureReporter.startStep('Check if sign up button is clickable');
     try {
       const result = browser.isAndroid ? 
