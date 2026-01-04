@@ -201,8 +201,8 @@ describe('Smart Waits Examples', () => {
   });
 
   it('Example 11: Page stability wait', async () => {
-    // Wait for page to be stable before interactions
-    const isStable = await SmartWaits.waitForPageStable(5000);
+    // Wait for page animations to complete
+    const isStable = await SmartWaits.waitForPageStable(500);
     expect(isStable).toBe(true);
   });
 

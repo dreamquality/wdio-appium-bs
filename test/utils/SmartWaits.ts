@@ -7,9 +7,7 @@ import { browser } from '@wdio/globals'
 
 export interface WaitOptions {
   timeout?: number;
-  interval?: number;
   timeoutMsg?: string;
-  reverse?: boolean;
 }
 
 export interface FluentWaitOptions extends WaitOptions {
@@ -469,15 +467,15 @@ export class SmartWaits {
   }
 
   /**
-   * Wait for page to be stable (no pending requests/animations)
+   * Wait for page to be stable (simple pause for animations)
+   * @param delay - Delay in milliseconds to wait
    */
-  static async waitForPageStable(timeout: number = 5000): Promise<boolean> {
+  static async waitForPageStable(delay: number = 500): Promise<boolean> {
     try {
       // Wait for any animations to complete
-      await browser.pause(500);
+      await browser.pause(delay);
       
-      // Additional stability checks can be added here
-      console.log('Page is stable');
+      console.log('Page stable wait completed');
       return true;
     } catch (error) {
       console.log(`Page stability check failed: ${(error as Error).message}`);
@@ -532,27 +530,30 @@ export class SmartWaits {
     } = {}
   ): Promise<T> {
     const { maxRetries = 3, retryDelay = 1000, onRetry } = options;
+    let lastError: Error | undefined;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         return await operation();
       } catch (error) {
+        lastError = error as Error;
+        
         if (attempt === maxRetries) {
           throw error;
         }
         
-        const err = error as Error;
-        console.log(`Operation failed on attempt ${attempt}/${maxRetries}: ${err.message}`);
+        console.log(`Operation failed on attempt ${attempt}/${maxRetries}: ${lastError.message}`);
         
         if (onRetry) {
-          onRetry(attempt, err);
+          onRetry(attempt, lastError);
         }
         
         await browser.pause(retryDelay);
       }
     }
 
-    throw new Error('Retry operation failed');
+    // This line is technically unreachable but kept for type safety
+    throw lastError || new Error('Retry operation failed');
   }
 }
 
