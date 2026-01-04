@@ -316,24 +316,26 @@ export class PlatformDetection {
 
   /**
    * Accept alert (platform-specific handling)
+   * Note: iOS WebDriver has reversed terminology - dismissAlert accepts the alert
    */
   static async acceptAlert(): Promise<void> {
     if (this.isAndroid()) {
       await browser.acceptAlert();
     } else if (this.isIOS()) {
-      // On iOS, acceptAlert dismisses the alert
+      // iOS has reversed semantics: dismissAlert actually accepts
       await browser.dismissAlert();
     }
   }
 
   /**
    * Dismiss alert (platform-specific handling)
+   * Note: iOS WebDriver has reversed terminology - acceptAlert dismisses the alert
    */
   static async dismissAlert(): Promise<void> {
     if (this.isAndroid()) {
       await browser.dismissAlert();
     } else if (this.isIOS()) {
-      // On iOS, dismissAlert accepts the alert
+      // iOS has reversed semantics: acceptAlert actually dismisses
       await browser.acceptAlert();
     }
   }
@@ -419,13 +421,15 @@ export class PlatformDetection {
 
   /**
    * Get platform-specific system bars height (status bar + navigation bar)
+   * Note: These are approximate values that may vary by device, screen size, and OS version
+   * For accurate values, consider using device-specific calculations
    */
   static async getSystemBarsHeight(): Promise<{ top: number; bottom: number }> {
-    // Approximate values, actual may vary
+    // Approximate values - actual heights may vary
     if (this.isAndroid()) {
-      return { top: 75, bottom: 100 }; // Status bar + nav bar
+      return { top: 75, bottom: 100 }; // Approximate: Status bar + nav bar
     } else {
-      return { top: 88, bottom: 34 }; // Status bar + home indicator
+      return { top: 88, bottom: 34 }; // Approximate: Status bar + home indicator
     }
   }
 
@@ -447,11 +451,13 @@ export class PlatformDetection {
   }
 
   /**
-   * Wait for platform-specific condition
+   * Simple pause for platform initialization
+   * Note: This is a basic delay, not an actual platform readiness check
+   * Consider implementing specific readiness checks based on your app's needs
    */
-  static async waitForPlatformReady(timeout: number = 5000): Promise<void> {
-    await browser.pause(timeout);
-    console.log(`Platform ${this.getPlatform()} is ready`);
+  static async pauseForPlatform(delay: number = 5000): Promise<void> {
+    await browser.pause(delay);
+    console.log(`Platform ${this.getPlatform()} initialization pause completed`);
   }
 
   /**

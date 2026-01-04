@@ -367,9 +367,9 @@ describe('Platform Detection Examples', () => {
     console.log('Username field XPath:', page.usernameField);
   });
 
-  it('Example 24: Wait for Platform Ready', async () => {
-    // Wait for platform to be ready (useful in beforeAll/beforeEach)
-    await PlatformDetection.waitForPlatformReady(1000);
-    console.log('Platform is ready for testing');
+  it('Example 24: Pause for Platform Initialization', async () => {
+    // Pause for platform initialization (useful in beforeAll/beforeEach)
+    await PlatformDetection.pauseForPlatform(1000);
+    console.log('Platform initialization pause completed');
   });
 });
