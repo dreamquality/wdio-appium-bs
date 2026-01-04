@@ -200,7 +200,7 @@ export class ElementInteractionHelpers {
         }
 
         // Hide keyboard
-        if (hideKeyboard && browser.isMobile) {
+        if (hideKeyboard) {
           try {
             if (browser.isAndroid) {
               await browser.hideKeyboard();
@@ -378,7 +378,9 @@ export class ElementInteractionHelpers {
             // Method 2: Click and select
             await element.click();
             await browser.pause(500);
-            const option = await $(`//*[@text='${value}' or @label='${value}']`);
+            // Sanitize value to prevent XPath injection
+            const sanitizedValue = value.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+            const option = await $(`//*[@text='${sanitizedValue}' or @label='${sanitizedValue}']`);
             await option.click();
           } catch {
             // Method 3: Set value directly
@@ -505,18 +507,29 @@ export class ElementInteractionHelpers {
 
         const element = await $(selector);
         
-        // Scroll into view
-        await element.scrollIntoView();
-        await browser.pause(500);
-
-        // Verify element is in viewport
-        const isInViewport = await element.isDisplayedInViewport();
-        
-        if (!isInViewport) {
-          // Try scrolling again with offset
-          await browser.execute('arguments[0].scrollIntoView({block: "center"})', element);
-          await browser.pause(500);
+        // Scroll into view (works for both web and native contexts)
+        try {
+          await element.scrollIntoView();
+        } catch {
+          // Fallback for native apps - try touch actions
+          try {
+            const location = await element.getLocation();
+            const windowSize = await browser.getWindowSize();
+            
+            // Check if element is below viewport
+            if (location.y > windowSize.height) {
+              await browser.touchAction([
+                { action: 'press', x: windowSize.width / 2, y: windowSize.height * 0.8 },
+                { action: 'wait', ms: 100 },
+                { action: 'moveTo', x: windowSize.width / 2, y: windowSize.height * 0.2 },
+                'release'
+              ]);
+            }
+          } catch {
+            // Ignore if native scrolling fails
+          }
         }
+        await browser.pause(500);
 
         console.log(`✓ Successfully scrolled to ${selector}`);
         return true;
