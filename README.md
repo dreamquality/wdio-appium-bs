@@ -11,6 +11,7 @@ Template for end-to-end testing with hybrid mobile applications.
 - ✅ **Allure Reports** with automatic step tracking
 - ✅ **Smart Waits** - Advanced wait strategies for reliable tests
 - ✅ **Element Interaction Helpers** - Intelligent interactions with auto-retry
+- ✅ **Platform Detection** - Automatic Android/iOS handling
 - ✅ **Page Object Pattern** with comprehensive utilities
 - ✅ **CI/CD Ready** with GitHub Actions
 
@@ -89,6 +90,59 @@ await ElementInteractionHelpers.chainInteractions(
   async () => await ElementInteractionHelpers.smartInput('~username', 'user'),
   async () => await ElementInteractionHelpers.smartInput('~password', 'pass'),
   async () => await ElementInteractionHelpers.smartClick('~login')
+);
+```
+
+## 📱 Platform Detection
+
+**Platform Detection** provides automatic Android/iOS detection with platform-specific handling for seamless cross-platform automation:
+
+- **Automatic Detection**: `isAndroid()`, `isIOS()`, `getPlatform()`
+- **Platform Info**: Detailed device and platform information
+- **Smart Selectors**: Automatic platform-specific selector selection
+- **XPath Builder**: Generate platform-specific XPath automatically
+- **Platform Actions**: Keyboard hiding, back button, alert handling
+- **App Management**: Terminate/activate apps with platform-specific APIs
+- **Device Control**: Orientation, scrolling, gesture durations
+- **Configuration**: Platform-specific timeouts and settings
+
+📖 **[Full Platform Detection Documentation](test/utils/PLATFORM_DETECTION_README.md)**
+
+### Quick Example
+
+```typescript
+import PlatformDetection from '../utils/PlatformDetection';
+
+// Automatic platform detection
+if (PlatformDetection.isAndroid()) {
+  await PlatformDetection.pressBackButton();
+}
+
+// Platform-specific selectors
+const button = PlatformDetection.selectPlatformSelector({
+  android: '//android.widget.Button[@text="Login"]',
+  ios: '//XCUIElementTypeButton[@label="Login"]'
+});
+
+// Build platform-specific XPath
+const xpath = PlatformDetection.buildPlatformXPath({
+  text: 'Submit',
+  className: 'Button'
+});
+
+// Platform-specific configuration
+const timeout = PlatformDetection.getPlatformValue({
+  android: 10000,
+  ios: 15000
+});
+
+// Hide keyboard (works on both platforms)
+await PlatformDetection.hideKeyboard();
+
+// Execute platform-specific actions
+await PlatformDetection.executePlatformSpecific(
+  async () => console.log('Android'),
+  async () => console.log('iOS')
 );
 ```
 
