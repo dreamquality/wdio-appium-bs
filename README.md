@@ -3,6 +3,50 @@
 
 Template for end-to-end testing with hybrid mobile applications.
 
+## 🚀 Features
+
+- ✅ **WebdriverIO v9** with TypeScript support
+- ✅ **Appium v3** for mobile automation
+- ✅ **BrowserStack** integration for cloud testing
+- ✅ **Allure Reports** with automatic step tracking
+- ✅ **Smart Waits** - Advanced wait strategies for reliable tests
+- ✅ **Page Object Pattern** with comprehensive utilities
+- ✅ **CI/CD Ready** with GitHub Actions
+
+## 💡 Smart Waits Enhancement
+
+This boilerplate includes a comprehensive **Smart Waits** utility that provides robust, configurable wait strategies for mobile automation:
+
+- **Element State Waits**: Present, Visible, Clickable, Enabled
+- **Content Waits**: Text, Attributes, Element Count
+- **Advanced Strategies**: Fluent Wait, Exponential Backoff, Smart Retry
+- **Multiple Element Handling**: Wait for any/all elements
+- **Viewport Detection**: Wait for elements in viewport
+- **Automatic Error Handling**: Non-throwing waits with graceful fallbacks
+
+📖 **[Full Smart Waits Documentation](test/utils/SMART_WAITS_README.md)**
+
+### Quick Example
+
+```typescript
+import SmartWaits from '../utils/SmartWaits';
+
+// Wait for element to be clickable before interaction
+await SmartWaits.waitForElementClickable('~loginButton', { timeout: 15000 });
+
+// Wait for any element (conditional flows)
+const element = await SmartWaits.waitForAnyElementVisible([
+  '~errorMessage',
+  '~successMessage'
+]);
+
+// Smart retry for unstable operations
+await SmartWaits.retryOperation(
+  async () => await $('~button').click(),
+  { maxRetries: 3 }
+);
+```
+
 ## Setup
 
 ### Install Required Software and Project Checkout
