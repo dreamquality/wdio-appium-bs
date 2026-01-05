@@ -13,6 +13,7 @@ Template for end-to-end testing with hybrid mobile applications.
 - ✅ **Element Interaction Helpers** - Intelligent interactions with auto-retry
 - ✅ **Platform Detection** - Automatic Android/iOS handling
 - ✅ **Test Data Management** - JSON/YAML support with environment handling
+- ✅ **Advanced Gestures** - Multi-touch, pinch/zoom, rotation, complex gesture chains
 - ✅ **Page Object Pattern** with comprehensive utilities
 - ✅ **CI/CD Ready** with GitHub Actions
 
@@ -189,6 +190,54 @@ const password = TestDataManager.generateRandomPassword(12);
 
 // Nested data access
 const apiTimeout = tdm.getData('config', 'timeouts.long');
+```
+
+## 🎨 Advanced Gestures
+
+**Advanced Gestures** provides comprehensive gesture support including multi-touch, pinch/zoom, rotation, and complex gesture chains:
+
+- **Multi-Touch**: Pinch in/out, rotate, two-finger tap, custom multi-touch
+- **Precise Control**: Coordinate-based swipes, velocity-based flicks
+- **Complex Gestures**: Gesture chains, circular swipes, drag and drop
+- **Edge Gestures**: Swipe from screen edges
+- **Percentage Scrolling**: Scroll by screen percentage
+- **Platform Compatible**: Works on both Android and iOS
+
+📖 **[Full Advanced Gestures Documentation](test/utils/ADVANCED_GESTURES_README.md)**
+
+### Quick Example
+
+```typescript
+import AdvancedGestures from '../utils/AdvancedGestures';
+
+// Pinch out to zoom in
+await AdvancedGestures.pinchOut('~imageView', { scale: 2.5 });
+
+// Rotate element 90 degrees
+await AdvancedGestures.rotate('~photoView', { rotation: 90 });
+
+// Two-finger tap
+await AdvancedGestures.twoFingerTap('~textView');
+
+// Edge swipe (e.g., open navigation drawer)
+await AdvancedGestures.edgeSwipe('left');
+
+// Scroll by percentage
+await AdvancedGestures.scrollByPercentage('down', 0.5);
+
+// Flick with velocity
+await AdvancedGestures.flick({
+  startX: 200, startY: 800,
+  endX: 200, endY: 200,
+  velocity: 3000
+});
+
+// Complex gesture chain
+await AdvancedGestures.gestureChain(
+  async () => await AdvancedGestures.pinchOut('~image', { scale: 2 }),
+  async () => await AdvancedGestures.rotate('~image', { rotation: 45 }),
+  async () => await AdvancedGestures.pinchIn('~image', { scale: 0.5 })
+);
 ```
 
 ## Setup
