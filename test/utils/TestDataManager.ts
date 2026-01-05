@@ -55,7 +55,10 @@ export class TestDataManager {
    * Reset instance (useful for testing)
    */
   static resetInstance(): void {
-    TestDataManager.instance = null as any;
+    if (TestDataManager.instance) {
+      TestDataManager.instance.clearCache();
+    }
+    TestDataManager.instance = undefined as any;
   }
 
   /**
@@ -91,7 +94,7 @@ export class TestDataManager {
       return this.dataCache.get(fileName)!;
     }
 
-    let filePath: string;
+    let filePath: string | undefined;
     let data: TestData;
 
     // Try to find file with different extensions
@@ -106,7 +109,7 @@ export class TestDataManager {
       }
     }
 
-    if (!filePath!) {
+    if (!filePath) {
       // Try without extension
       filePath = path.join(baseDir, fileName);
       if (!fs.existsSync(filePath)) {
