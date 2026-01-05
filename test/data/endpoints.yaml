@@ -1,0 +1,14 @@
+api:
+  login: "/api/v1/auth/login"
+  logout: "/api/v1/auth/logout"
+  register: "/api/v1/auth/register"
+  profile: "/api/v1/user/profile"
+  users: "/api/v1/users"
+  products: "/api/v1/products"
+
+mobile:
+  home: "/"
+  login: "/login"
+  register: "/register"
+  dashboard: "/dashboard"
+  settings: "/settings"

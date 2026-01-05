@@ -12,6 +12,7 @@ Template for end-to-end testing with hybrid mobile applications.
 - ✅ **Smart Waits** - Advanced wait strategies for reliable tests
 - ✅ **Element Interaction Helpers** - Intelligent interactions with auto-retry
 - ✅ **Platform Detection** - Automatic Android/iOS handling
+- ✅ **Test Data Management** - JSON/YAML support with environment handling
 - ✅ **Page Object Pattern** with comprehensive utilities
 - ✅ **CI/CD Ready** with GitHub Actions
 
@@ -144,6 +145,50 @@ await PlatformDetection.executePlatformSpecific(
   async () => console.log('Android'),
   async () => console.log('iOS')
 );
+```
+
+## 📊 Test Data Management
+
+**Test Data Management** provides a comprehensive system for loading and managing test data from JSON and YAML files with environment support:
+
+- **Multiple Formats**: JSON and YAML support
+- **Environment-Specific**: Load data based on environment (dev, staging, prod)
+- **Environment Overrides**: Override data with environment variables
+- **Type-Safe Access**: Generic type support for type safety
+- **Nested Data**: Access nested data with dot notation
+- **Caching**: Built-in caching for performance
+- **Random Generation**: Generate random emails, usernames, passwords
+- **Data Validation**: Validate data against custom schemas
+
+📖 **[Full Test Data Management Documentation](test/utils/TEST_DATA_MANAGEMENT_README.md)**
+
+### Quick Example
+
+```typescript
+import TestDataManager from '../utils/TestDataManager';
+
+const tdm = TestDataManager.getInstance();
+
+// Load user data
+const user = tdm.getUser('default');
+console.log(user.username, user.password);
+
+// Get configuration
+const timeout = tdm.getConfig<number>('timeouts.default');
+
+// Get locators
+const loginButton = tdm.getLocator('loginButton');
+
+// Environment-specific data
+tdm.setEnvironment('staging');
+const stagingUser = tdm.getUser('default');
+
+// Random data generation
+const email = TestDataManager.generateRandomEmail('test');
+const password = TestDataManager.generateRandomPassword(12);
+
+// Nested data access
+const apiTimeout = tdm.getData('config', 'timeouts.long');
 ```
 
 ## Setup

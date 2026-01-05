@@ -1,0 +1,9 @@
+{
+  "default": {
+    "username": "staging.user@example.com",
+    "password": "StagingPass123!",
+    "email": "staging.user@example.com",
+    "firstName": "Staging",
+    "lastName": "User"
+  }
+}

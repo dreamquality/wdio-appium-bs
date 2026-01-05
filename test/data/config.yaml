@@ -1,0 +1,27 @@
+timeouts:
+  default: 15000
+  short: 5000
+  medium: 10000
+  long: 30000
+  veryLong: 60000
+
+retries:
+  default: 3
+  api: 5
+  ui: 3
+
+urls:
+  base: "https://app.example.com"
+  api: "https://api.example.com"
+  staging: "https://staging.example.com"
+
+app:
+  packageName: "com.example.app"
+  bundleId: "com.example.app"
+  launchTimeout: 20000
+
+features:
+  enableLogging: true
+  takeScreenshotsOnFailure: true
+  autoRetry: true
+  waitForAnimations: true
