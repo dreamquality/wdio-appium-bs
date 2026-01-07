@@ -15,6 +15,7 @@ Template for end-to-end testing with hybrid mobile applications.
 - ✅ **Test Data Management** - JSON/YAML support with environment handling
 - ✅ **Advanced Gestures** - Multi-touch, pinch/zoom, rotation, complex gesture chains
 - ✅ **App Management** - Install/uninstall helpers, app state management
+- ✅ **Network Mocking** - API mocking, proxy configuration, request/response interception
 - ✅ **Page Object Pattern** with comprehensive utilities
 - ✅ **CI/CD Ready** with GitHub Actions
 
@@ -293,6 +294,72 @@ await AppManagement.ensureAppInForeground('com.example.app');
 
 // Restart app (kill and relaunch)
 await AppManagement.restartApp('com.example.app');
+```
+
+## 🌐 Network Mocking
+
+**Network Mocking** provides comprehensive network interception and API mocking capabilities:
+
+- **Mock Server**: Built-in HTTP server for API endpoint mocking
+- **Request/Response Interception**: Modify requests and responses on-the-fly
+- **Proxy Configuration**: Configure proxy settings for the driver
+- **Request Logging**: Track and assert on network requests
+- **Network Simulation**: Simulate network conditions (latency, offline mode)
+- **Flexible Matching**: Route matching with strings or RegEx patterns
+
+📖 **[Full Network Mocking Documentation](test/utils/NETWORK_MOCKING_README.md)**
+
+### Quick Example
+
+```typescript
+import NetworkMocking from '../utils/NetworkMocking';
+
+// Start mock server
+await NetworkMocking.startMockServer({ port: 8080 });
+
+// Add mock routes
+NetworkMocking.addMockRoute({
+  method: 'GET',
+  path: '/api/users',
+  response: {
+    status: 200,
+    body: { users: [{ id: 1, name: 'John' }] }
+  }
+});
+
+// Dynamic response
+NetworkMocking.addMockRoute({
+  method: 'POST',
+  path: '/api/login',
+  response: (req) => {
+    const body = JSON.parse(req.body);
+    return {
+      status: 200,
+      body: { token: 'token123', user: body.username }
+    };
+  }
+});
+
+// Add request interceptor
+NetworkMocking.addRequestInterceptor((request) => ({
+  ...request,
+  headers: { ...request.headers, 'Authorization': 'Bearer token' }
+}));
+
+// Assert requests
+NetworkMocking.assertRequestMade({
+  method: 'POST',
+  urlPattern: /\/api\/login/
+});
+
+// Configure proxy
+const proxyString = NetworkMocking.configureProxy({
+  host: 'localhost',
+  port: 8080
+});
+
+// Cleanup
+await NetworkMocking.cleanup();
 ```
 
 ## Setup
