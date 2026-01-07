@@ -14,6 +14,7 @@ Template for end-to-end testing with hybrid mobile applications.
 - ✅ **Platform Detection** - Automatic Android/iOS handling
 - ✅ **Test Data Management** - JSON/YAML support with environment handling
 - ✅ **Advanced Gestures** - Multi-touch, pinch/zoom, rotation, complex gesture chains
+- ✅ **App Management** - Install/uninstall helpers, app state management
 - ✅ **Page Object Pattern** with comprehensive utilities
 - ✅ **CI/CD Ready** with GitHub Actions
 
@@ -238,6 +239,60 @@ await AdvancedGestures.gestureChain(
   async () => await AdvancedGestures.rotate('~image', { rotation: 45 }),
   async () => await AdvancedGestures.pinchIn('~image', { scale: 0.5 })
 );
+```
+
+## 📦 App Management
+
+**App Management** provides comprehensive app lifecycle management for mobile automation:
+
+- **Install/Uninstall**: Install, uninstall, and check installation status
+- **App Lifecycle**: Launch, close, terminate, restart, reset apps
+- **State Management**: Query app state, background/foreground control
+- **Data Management**: Clear app data, get app strings
+- **Permissions**: Grant and revoke permissions (Android)
+- **Activity Control**: Start activities, get current activity/package (Android)
+- **Wait Utilities**: Wait for app states, ensure foreground
+
+📖 **[Full App Management Documentation](test/utils/APP_MANAGEMENT_README.md)**
+
+### Quick Example
+
+```typescript
+import AppManagement from '../utils/AppManagement';
+
+// Install app
+await AppManagement.installApp('/path/to/app.apk', {
+  grantPermissions: true
+});
+
+// Check installation
+const installed = await AppManagement.isAppInstalled('com.example.app');
+
+// Launch and verify state
+await AppManagement.launchApp('com.example.app');
+const inForeground = await AppManagement.isAppInForeground('com.example.app');
+
+// Background for 5 seconds
+await AppManagement.backgroundApp(5);
+
+// Terminate and relaunch
+await AppManagement.terminateApp('com.example.app');
+await AppManagement.launchApp('com.example.app');
+
+// Clear app data (Android)
+await AppManagement.clearAppData('com.example.app');
+
+// Grant permissions (Android)
+await AppManagement.grantPermissions('com.example.app', [
+  'android.permission.CAMERA',
+  'android.permission.READ_CONTACTS'
+]);
+
+// Ensure app is in foreground (auto launch/activate)
+await AppManagement.ensureAppInForeground('com.example.app');
+
+// Restart app (kill and relaunch)
+await AppManagement.restartApp('com.example.app');
 ```
 
 ## Setup
