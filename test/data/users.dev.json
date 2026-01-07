@@ -1,0 +1,9 @@
+{
+  "default": {
+    "username": "dev.user@example.com",
+    "password": "DevPass123!",
+    "email": "dev.user@example.com",
+    "firstName": "Dev",
+    "lastName": "User"
+  }
+}

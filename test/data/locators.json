@@ -1,0 +1,12 @@
+{
+  "loginButton": "~login-button",
+  "usernameField": "~username-input",
+  "passwordField": "~password-input",
+  "submitButton": "~submit-button",
+  "errorMessage": "~error-message",
+  "successMessage": "~success-message",
+  "homeIcon": "~home-icon",
+  "settingsIcon": "~settings-icon",
+  "profileIcon": "~profile-icon",
+  "logoutButton": "~logout-button"
+}

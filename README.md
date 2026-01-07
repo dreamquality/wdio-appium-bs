@@ -3,6 +3,380 @@
 
 Template for end-to-end testing with hybrid mobile applications.
 
+## 🚀 Features
+
+- ✅ **WebdriverIO v9** with TypeScript support
+- ✅ **Appium v3** for mobile automation
+- ✅ **BrowserStack** integration for cloud testing
+- ✅ **Allure Reports** with automatic step tracking
+- ✅ **Smart Waits** - Advanced wait strategies for reliable tests
+- ✅ **Element Interaction Helpers** - Intelligent interactions with auto-retry
+- ✅ **Platform Detection** - Automatic Android/iOS handling
+- ✅ **Test Data Management** - JSON/YAML support with environment handling
+- ✅ **Advanced Gestures** - Multi-touch, pinch/zoom, rotation, complex gesture chains
+- ✅ **App Management** - Install/uninstall helpers, app state management
+- ✅ **Network Mocking** - API mocking, proxy configuration, request/response interception
+- ✅ **Page Object Pattern** with comprehensive utilities
+- ✅ **CI/CD Ready** with GitHub Actions
+
+## 🎨 Integrated Utilities in Page Objects
+
+**All utilities are now integrated directly into the base Page class!** Access Smart Waits, Element Interaction Helpers, Platform Detection, Test Data Management, Advanced Gestures, App Management, and Network Mocking from any page object.
+
+📖 **[Complete Integration Guide](test/pageobjects/INTEGRATED_UTILITIES_GUIDE.md)**
+
+### Quick Start
+
+```typescript
+import entry from './pageobjects/entry.page.js'
+
+// All utilities accessible through page object
+await entry.smartWaits.waitForElementClickable('~button');
+await entry.elementHelpers.smartClick('~button', { retries: 3 });
+const user = entry.testData.getUser('default');
+await entry.gestures.pinchOut('~map', { scale: 2.0 });
+await entry.appMgmt.ensureAppInForeground('com.app');
+entry.network.addMockRoute({ method: 'GET', path: '/api/data', response: { status: 200 } });
+```
+
+### Benefits
+
+✅ **Unified API** - All utilities accessible from page objects  
+✅ **No Import Overhead** - Utilities already imported in base class  
+✅ **Consistent Usage** - Same pattern across all tests  
+✅ **Type Safety** - Full TypeScript support with IDE autocomplete  
+✅ **Easy Discovery** - All methods visible in your IDE  
+
+## 💡 Smart Waits Enhancement
+
+Comprehensive **Smart Waits** utility providing robust, configurable wait strategies:
+
+- **Element State Waits**: Present, Visible, Clickable, Enabled
+- **Content Waits**: Text, Attributes, Element Count
+- **Advanced Strategies**: Fluent Wait, Exponential Backoff, Smart Retry
+- **Multiple Element Handling**: Wait for any/all elements
+- **Viewport Detection**: Wait for elements in viewport
+
+📖 **[Full Smart Waits Documentation](test/utils/SMART_WAITS_README.md)**
+
+### Usage
+
+```typescript
+// Access through page object
+await entry.smartWaits.waitForElementClickable('~loginButton', { timeout: 15000 });
+
+// Wait for any element (conditional flows)
+const element = await entry.smartWaits.waitForAnyElementVisible([
+  '~errorMessage',
+  '~successMessage'
+]);
+
+// Smart retry for unstable operations
+await entry.smartWaits.retryOperation(
+  async () => await entry.clickSignUpButton('~btn'),
+  { maxRetries: 3 }
+);
+```
+
+## 🎯 Element Interaction Helpers
+
+**Element Interaction Helpers** provide intelligent interaction methods with built-in retry logic and validation:
+
+- **Smart Click & Tap**: Auto-retry clicking with state validation
+- **Smart Input**: Text input with validation and keyboard handling
+- **Gestures**: Swipe, drag, long press, double tap
+- **Smart Select**: Dropdown/picker selection with fallbacks
+- **Interaction Chains**: Sequential operations with error handling
+
+📖 **[Full Element Interaction Documentation](test/utils/ELEMENT_INTERACTION_README.md)**
+
+### Usage
+
+```typescript
+// Access through page object
+await entry.elementHelpers.smartClick('~button', {
+  scrollIntoView: true,
+  retries: 3
+});
+
+// Smart input with validation
+await entry.elementHelpers.smartInput('~email', 'user@example.com', {
+  validateInput: true,
+  hideKeyboard: true
+});
+
+// Chain multiple interactions
+await entry.elementHelpers.chainInteractions(
+  async () => await entry.elementHelpers.smartInput('~username', 'user'),
+  async () => await entry.elementHelpers.smartClick('~login')
+);
+```
+
+## 📱 Platform Detection
+
+**Platform Detection** provides automatic Android/iOS detection with platform-specific handling for seamless cross-platform automation:
+
+- **Automatic Detection**: `isAndroid()`, `isIOS()`, `getPlatform()`
+- **Platform Info**: Detailed device and platform information
+- **Smart Selectors**: Automatic platform-specific selector selection
+- **XPath Builder**: Generate platform-specific XPath automatically
+- **Platform Actions**: Keyboard hiding, back button, alert handling
+- **App Management**: Terminate/activate apps with platform-specific APIs
+- **Device Control**: Orientation, scrolling, gesture durations
+- **Configuration**: Platform-specific timeouts and settings
+
+📖 **[Full Platform Detection Documentation](test/utils/PLATFORM_DETECTION_README.md)**
+
+### Quick Example
+
+```typescript
+import PlatformDetection from '../utils/PlatformDetection';
+
+// Automatic platform detection
+if (PlatformDetection.isAndroid()) {
+  await PlatformDetection.pressBackButton();
+}
+
+// Platform-specific selectors
+const button = PlatformDetection.selectPlatformSelector({
+  android: '//android.widget.Button[@text="Login"]',
+  ios: '//XCUIElementTypeButton[@label="Login"]'
+});
+
+// Build platform-specific XPath
+const xpath = PlatformDetection.buildPlatformXPath({
+  text: 'Submit',
+  className: 'Button'
+});
+
+// Platform-specific configuration
+const timeout = PlatformDetection.getPlatformValue({
+  android: 10000,
+  ios: 15000
+});
+
+// Hide keyboard (works on both platforms)
+await PlatformDetection.hideKeyboard();
+
+// Execute platform-specific actions
+await PlatformDetection.executePlatformSpecific(
+  async () => console.log('Android'),
+  async () => console.log('iOS')
+);
+```
+
+## 📊 Test Data Management
+
+**Test Data Management** provides a comprehensive system for loading and managing test data from JSON and YAML files with environment support:
+
+- **Multiple Formats**: JSON and YAML support
+- **Environment-Specific**: Load data based on environment (dev, staging, prod)
+- **Environment Overrides**: Override data with environment variables
+- **Type-Safe Access**: Generic type support for type safety
+- **Nested Data**: Access nested data with dot notation
+- **Caching**: Built-in caching for performance
+- **Random Generation**: Generate random emails, usernames, passwords
+- **Data Validation**: Validate data against custom schemas
+
+📖 **[Full Test Data Management Documentation](test/utils/TEST_DATA_MANAGEMENT_README.md)**
+
+### Quick Example
+
+```typescript
+import TestDataManager from '../utils/TestDataManager';
+
+const tdm = TestDataManager.getInstance();
+
+// Load user data
+const user = tdm.getUser('default');
+console.log(user.username, user.password);
+
+// Get configuration
+const timeout = tdm.getConfig<number>('timeouts.default');
+
+// Get locators
+const loginButton = tdm.getLocator('loginButton');
+
+// Environment-specific data
+tdm.setEnvironment('staging');
+const stagingUser = tdm.getUser('default');
+
+// Random data generation
+const email = TestDataManager.generateRandomEmail('test');
+const password = TestDataManager.generateRandomPassword(12);
+
+// Nested data access
+const apiTimeout = tdm.getData('config', 'timeouts.long');
+```
+
+## 🎨 Advanced Gestures
+
+**Advanced Gestures** provides comprehensive gesture support including multi-touch, pinch/zoom, rotation, and complex gesture chains:
+
+- **Multi-Touch**: Pinch in/out, rotate, two-finger tap, custom multi-touch
+- **Precise Control**: Coordinate-based swipes, velocity-based flicks
+- **Complex Gestures**: Gesture chains, circular swipes, drag and drop
+- **Edge Gestures**: Swipe from screen edges
+- **Percentage Scrolling**: Scroll by screen percentage
+- **Platform Compatible**: Works on both Android and iOS
+
+📖 **[Full Advanced Gestures Documentation](test/utils/ADVANCED_GESTURES_README.md)**
+
+### Quick Example
+
+```typescript
+import AdvancedGestures from '../utils/AdvancedGestures';
+
+// Pinch out to zoom in
+await AdvancedGestures.pinchOut('~imageView', { scale: 2.5 });
+
+// Rotate element 90 degrees
+await AdvancedGestures.rotate('~photoView', { rotation: 90 });
+
+// Two-finger tap
+await AdvancedGestures.twoFingerTap('~textView');
+
+// Edge swipe (e.g., open navigation drawer)
+await AdvancedGestures.edgeSwipe('left');
+
+// Scroll by percentage
+await AdvancedGestures.scrollByPercentage('down', 0.5);
+
+// Flick with velocity
+await AdvancedGestures.flick({
+  startX: 200, startY: 800,
+  endX: 200, endY: 200,
+  velocity: 3000
+});
+
+// Complex gesture chain
+await AdvancedGestures.gestureChain(
+  async () => await AdvancedGestures.pinchOut('~image', { scale: 2 }),
+  async () => await AdvancedGestures.rotate('~image', { rotation: 45 }),
+  async () => await AdvancedGestures.pinchIn('~image', { scale: 0.5 })
+);
+```
+
+## 📦 App Management
+
+**App Management** provides comprehensive app lifecycle management for mobile automation:
+
+- **Install/Uninstall**: Install, uninstall, and check installation status
+- **App Lifecycle**: Launch, close, terminate, restart, reset apps
+- **State Management**: Query app state, background/foreground control
+- **Data Management**: Clear app data, get app strings
+- **Permissions**: Grant and revoke permissions (Android)
+- **Activity Control**: Start activities, get current activity/package (Android)
+- **Wait Utilities**: Wait for app states, ensure foreground
+
+📖 **[Full App Management Documentation](test/utils/APP_MANAGEMENT_README.md)**
+
+### Quick Example
+
+```typescript
+import AppManagement from '../utils/AppManagement';
+
+// Install app
+await AppManagement.installApp('/path/to/app.apk', {
+  grantPermissions: true
+});
+
+// Check installation
+const installed = await AppManagement.isAppInstalled('com.example.app');
+
+// Launch and verify state
+await AppManagement.launchApp('com.example.app');
+const inForeground = await AppManagement.isAppInForeground('com.example.app');
+
+// Background for 5 seconds
+await AppManagement.backgroundApp(5);
+
+// Terminate and relaunch
+await AppManagement.terminateApp('com.example.app');
+await AppManagement.launchApp('com.example.app');
+
+// Clear app data (Android)
+await AppManagement.clearAppData('com.example.app');
+
+// Grant permissions (Android)
+await AppManagement.grantPermissions('com.example.app', [
+  'android.permission.CAMERA',
+  'android.permission.READ_CONTACTS'
+]);
+
+// Ensure app is in foreground (auto launch/activate)
+await AppManagement.ensureAppInForeground('com.example.app');
+
+// Restart app (kill and relaunch)
+await AppManagement.restartApp('com.example.app');
+```
+
+## 🌐 Network Mocking
+
+**Network Mocking** provides comprehensive network interception and API mocking capabilities:
+
+- **Mock Server**: Built-in HTTP server for API endpoint mocking
+- **Request/Response Interception**: Modify requests and responses on-the-fly
+- **Proxy Configuration**: Configure proxy settings for the driver
+- **Request Logging**: Track and assert on network requests
+- **Network Simulation**: Simulate network conditions (latency, offline mode)
+- **Flexible Matching**: Route matching with strings or RegEx patterns
+
+📖 **[Full Network Mocking Documentation](test/utils/NETWORK_MOCKING_README.md)**
+
+### Quick Example
+
+```typescript
+import NetworkMocking from '../utils/NetworkMocking';
+
+// Start mock server
+await NetworkMocking.startMockServer({ port: 8080 });
+
+// Add mock routes
+NetworkMocking.addMockRoute({
+  method: 'GET',
+  path: '/api/users',
+  response: {
+    status: 200,
+    body: { users: [{ id: 1, name: 'John' }] }
+  }
+});
+
+// Dynamic response
+NetworkMocking.addMockRoute({
+  method: 'POST',
+  path: '/api/login',
+  response: (req) => {
+    const body = JSON.parse(req.body);
+    return {
+      status: 200,
+      body: { token: 'token123', user: body.username }
+    };
+  }
+});
+
+// Add request interceptor
+NetworkMocking.addRequestInterceptor((request) => ({
+  ...request,
+  headers: { ...request.headers, 'Authorization': 'Bearer token' }
+}));
+
+// Assert requests
+NetworkMocking.assertRequestMade({
+  method: 'POST',
+  urlPattern: /\/api\/login/
+});
+
+// Configure proxy
+const proxyString = NetworkMocking.configureProxy({
+  host: 'localhost',
+  port: 8080
+});
+
+// Cleanup
+await NetworkMocking.cleanup();
+```
+
 ## Setup
 
 ### Install Required Software and Project Checkout
