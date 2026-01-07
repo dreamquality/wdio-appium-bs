@@ -19,81 +19,96 @@ Template for end-to-end testing with hybrid mobile applications.
 - ✅ **Page Object Pattern** with comprehensive utilities
 - ✅ **CI/CD Ready** with GitHub Actions
 
+## 🎨 Integrated Utilities in Page Objects
+
+**All utilities are now integrated directly into the base Page class!** Access Smart Waits, Element Interaction Helpers, Platform Detection, Test Data Management, Advanced Gestures, App Management, and Network Mocking from any page object.
+
+📖 **[Complete Integration Guide](test/pageobjects/INTEGRATED_UTILITIES_GUIDE.md)**
+
+### Quick Start
+
+```typescript
+import entry from './pageobjects/entry.page.js'
+
+// All utilities accessible through page object
+await entry.smartWaits.waitForElementClickable('~button');
+await entry.elementHelpers.smartClick('~button', { retries: 3 });
+const user = entry.testData.getUser('default');
+await entry.gestures.pinchOut('~map', { scale: 2.0 });
+await entry.appMgmt.ensureAppInForeground('com.app');
+entry.network.addMockRoute({ method: 'GET', path: '/api/data', response: { status: 200 } });
+```
+
+### Benefits
+
+✅ **Unified API** - All utilities accessible from page objects  
+✅ **No Import Overhead** - Utilities already imported in base class  
+✅ **Consistent Usage** - Same pattern across all tests  
+✅ **Type Safety** - Full TypeScript support with IDE autocomplete  
+✅ **Easy Discovery** - All methods visible in your IDE  
+
 ## 💡 Smart Waits Enhancement
 
-This boilerplate includes a comprehensive **Smart Waits** utility that provides robust, configurable wait strategies for mobile automation:
+Comprehensive **Smart Waits** utility providing robust, configurable wait strategies:
 
 - **Element State Waits**: Present, Visible, Clickable, Enabled
 - **Content Waits**: Text, Attributes, Element Count
 - **Advanced Strategies**: Fluent Wait, Exponential Backoff, Smart Retry
 - **Multiple Element Handling**: Wait for any/all elements
 - **Viewport Detection**: Wait for elements in viewport
-- **Automatic Error Handling**: Non-throwing waits with graceful fallbacks
 
 📖 **[Full Smart Waits Documentation](test/utils/SMART_WAITS_README.md)**
 
-### Quick Example
+### Usage
 
 ```typescript
-import SmartWaits from '../utils/SmartWaits';
-
-// Wait for element to be clickable before interaction
-await SmartWaits.waitForElementClickable('~loginButton', { timeout: 15000 });
+// Access through page object
+await entry.smartWaits.waitForElementClickable('~loginButton', { timeout: 15000 });
 
 // Wait for any element (conditional flows)
-const element = await SmartWaits.waitForAnyElementVisible([
+const element = await entry.smartWaits.waitForAnyElementVisible([
   '~errorMessage',
   '~successMessage'
 ]);
 
 // Smart retry for unstable operations
-await SmartWaits.retryOperation(
-  async () => await $('~button').click(),
+await entry.smartWaits.retryOperation(
+  async () => await entry.clickSignUpButton('~btn'),
   { maxRetries: 3 }
 );
 ```
 
 ## 🎯 Element Interaction Helpers
 
-**Element Interaction Helpers** provide intelligent interaction methods with built-in retry logic, state validation, and error handling:
+**Element Interaction Helpers** provide intelligent interaction methods with built-in retry logic and validation:
 
 - **Smart Click & Tap**: Auto-retry clicking with state validation
 - **Smart Input**: Text input with validation and keyboard handling
 - **Gestures**: Swipe, drag, long press, double tap
 - **Smart Select**: Dropdown/picker selection with fallbacks
-- **Smart Toggle**: Checkbox/switch management with verification
-- **Safe Interactions**: Error-proof wrappers for optional elements
-- **Interaction Chains**: Sequential operations with automatic error handling
+- **Interaction Chains**: Sequential operations with error handling
 
 📖 **[Full Element Interaction Documentation](test/utils/ELEMENT_INTERACTION_README.md)**
 
-### Quick Example
+### Usage
 
 ```typescript
-import ElementInteractionHelpers from '../utils/ElementInteractionHelpers';
-
-// Smart click with auto-retry and scroll
-await ElementInteractionHelpers.smartClick('~button', {
+// Access through page object
+await entry.elementHelpers.smartClick('~button', {
   scrollIntoView: true,
   retries: 3
 });
 
 // Smart input with validation
-await ElementInteractionHelpers.smartInput('~email', 'user@example.com', {
+await entry.elementHelpers.smartInput('~email', 'user@example.com', {
   validateInput: true,
   hideKeyboard: true
 });
 
-// Swipe gesture
-await ElementInteractionHelpers.smartSwipe('~carousel', {
-  direction: 'left'
-});
-
 // Chain multiple interactions
-await ElementInteractionHelpers.chainInteractions(
-  async () => await ElementInteractionHelpers.smartInput('~username', 'user'),
-  async () => await ElementInteractionHelpers.smartInput('~password', 'pass'),
-  async () => await ElementInteractionHelpers.smartClick('~login')
+await entry.elementHelpers.chainInteractions(
+  async () => await entry.elementHelpers.smartInput('~username', 'user'),
+  async () => await entry.elementHelpers.smartClick('~login')
 );
 ```
 

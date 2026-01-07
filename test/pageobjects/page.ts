@@ -1,6 +1,13 @@
 import { browser, $, $$ } from '@wdio/globals'
 import path from 'path'
 import fs from 'fs'
+import SmartWaits from '../utils/SmartWaits.js'
+import ElementInteractionHelpers from '../utils/ElementInteractionHelpers.js'
+import PlatformDetection from '../utils/PlatformDetection.js'
+import TestDataManager from '../utils/TestDataManager.js'
+import AdvancedGestures from '../utils/AdvancedGestures.js'
+import AppManagement from '../utils/AppManagement.js'
+import NetworkMocking from '../utils/NetworkMocking.js'
 
 /**
 * main page object containing all methods, selectors and functionality
@@ -8,6 +15,14 @@ import fs from 'fs'
 */
 
 export default class Page {
+    // Integrated utility instances - accessible from all page objects
+    public smartWaits = SmartWaits;
+    public elementHelpers = ElementInteractionHelpers;
+    public platform = PlatformDetection;
+    public testData = TestDataManager;
+    public gestures = AdvancedGestures;
+    public appMgmt = AppManagement;
+    public network = NetworkMocking;
 
     async open(path: string) {
       await browser.url(path);
